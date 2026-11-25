@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dr.Amr mossafer TBL Interactive MCQs</title>
+<style>
+:root{color-scheme:dark;--bg:#0d141b;--panel:#17232d;--panel2:#1d2b36;--line:#30414e;--text:#edf3f7;--muted:#9fb0bc;--accent:#75b7ec;--green:#42c99a;--red:#ff7777}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#1b2b39 0,#0d141b 58%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:780px;margin:auto;padding:22px 15px 50px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+h1{font-size:clamp(20px,4.5vw,28px);letter-spacing:-0.5px;margin:4px 0 5px}.sub{color:var(--muted);font-size:14px}
+.badge{border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--accent);font-size:13px;white-space:nowrap}
+.card{background:linear-gradient(145deg,#1b2934,#14202a);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 36px #0004;margin-bottom:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:11px;text-align:center}.stat b{display:block;font-size:20px}.stat span{font-size:12px;color:var(--muted)}
+.progress{height:7px;background:#26343f;border-radius:9px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}
+.qmeta{color:var(--accent);font-size:13px;font-weight:700;margin-bottom:10px}.question{font-size:19px;line-height:1.4;font-weight:650;margin:0 0 18px}
+.options{display:grid;gap:10px}.opt{width:100%;text-align:left;border:1px solid var(--line);background:#202f3a;color:var(--text);border-radius:12px;padding:13px 14px;display:flex;gap:12px;align-items:flex-start;transition:.15s;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent);background:#263a49}.letter{flex:0 0 26px;height:26px;border-radius:8px;background:#314453;display:grid;place-items:center;font-weight:700;color:#d6e7f4;font-size:13px}.opt.correct{border-color:var(--green);background:#15372f}.opt.wrong{border-color:var(--red);background:#3b2428}.opt:disabled{cursor:default;opacity:1}
+.feedback{min-height:28px;margin:14px 0 0;font-weight:650}
+.feedback.good{color:var(--green)}
+.feedback.bad{color:var(--red)}
+.controls{display:flex;justify-content:space-between;gap:10px;margin-top:18px}.btn{border:1px solid var(--line);border-radius:11px;padding:10px 16px;background:#243440;color:var(--text);font-weight:650;cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#10202b}.btn:disabled{opacity:.35;cursor:not-allowed}
+.tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.tools .btn{font-size:13px;padding:8px 12px}
+.topic-item{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;cursor:pointer;transition:.15s}
+.topic-item:hover{border-color:var(--accent);background:var(--panel2)}
+.topic-item input{width:20px;height:20px;accent-color:var(--accent);cursor:pointer}
+.actions-bar{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.hidden{display:none!important}
+.result h2{margin-top:0}.review-item{border-top:1px solid var(--line);padding:12px 0}.review-item small{color:var(--muted)}.review-item strong{display:block;margin:4px 0}
+@media(max-width:480px){.wrap{padding:16px 11px 35px}.card{padding:16px}.question{font-size:17px}.stats{gap:6px}.stat{padding:9px 4px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+  <div>
+    <h1>Dr.Amr mossafer TBL Interactive MCQs</h1>
+    <div class="sub">Interactive Chapter Selector · 179 Questions</div>
+  </div>
+  <div class="badge" id="badge-count">179 Questions</div>
+</header>
+
+<section class="card" id="setup-view">
+<h2 style="margin-top:0;font-size:22px;">Select Chapters to Practice</h2>
+<p class="sub" style="margin-bottom:20px;">Choose one or more chapters from Dr. Amr Mosafer's TBL CNS MCQs.</p>
+
+<div style="display:flex;gap:15px;margin-bottom:15px;">
+  <button class="btn" type="button" id="select-all">Select all</button>
+  <button class="btn" type="button" id="clear-all">Clear</button>
+</div>
+
+<div id="topics-list"></div>
+
+<div class="actions-bar">
+  <button class="btn primary" id="start-btn" style="width:100%;padding:14px;font-size:16px;">Start Practice Quiz →</button>
+</div>
+</section>
+
+<section class="card hidden" id="quiz-view">
+<section class="stats">
+  <div class="stat"><b id="answered">0</b><span>Answered</span></div>
+  <div class="stat"><b id="correct">0</b><span>Correct</span></div>
+  <div class="stat"><b id="percent">0%</b><span>Accuracy</span></div>
+</section>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="qmeta" id="qmeta">QUESTION 1 / 0</div>
+<p class="question" id="question"></p>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="controls">
+  <button class="btn" id="prev">← Previous</button>
+  <button class="btn primary" id="next">Next →</button>
+</div>
+<div class="tools">
+  <button class="btn" id="finish">Finish exam</button>
+  <button class="btn" id="back-setup">⚙ Change Chapters</button>
+</div>
+</section>
+
+<section class="card result hidden" id="result-view">
+<h2>Quiz Result</h2>
+<p id="summary"></p>
+<div id="review"></div>
+<div class="tools">
+  <button class="btn primary" id="again">Select Other Chapters / Try Again</button>
+</div>
+</section>
+
+</main>
+<script>
+const allChapters = [
+  {
+    id: "spinal_cord",
+    name: "Spinal Cord (77 Questions)",
+    questions: [
+      {q: "1. Lumbar puncture in newborn: Cerebrospinal fluid (CSF) is normally withdrawn from which of the following sites?", choices: ["L1-L2 subarachnoid space", "L2-L3 subarachnoid space", "L4-L5 subarachnoid space", "L4-L5 subdural space"], a: 2},
+      {q: "2. A 21-year-old woman underwent spinal anesthesia for emergent cesarean section, during which she felt radiating pain in left lower limb and later developed numbness and weakness. Most probably the injury happened at which vertebral level?", choices: ["T12-L1", "L2-L3", "L3-L4", "L4-L5"], a: 0},
+      {q: "3. Cerebrospinal fluid (CSF) is normally withdrawn from which of the following spaces?", choices: ["Space between spinal cord & pia mater", "Space between arachnoid & dura", "Space between arachnoid & pia mater", "Space between vertebral canal & dura"], a: 2},
+      {q: "4. Which vertebral level is the most appropriate location for lumbar puncture in an adult?", choices: ["T12-L1", "L1-L2", "L2-L3", "L4-L5"], a: 3},
+      {q: "5. What is the main source of blood supply to the lower part of the spinal cord?", choices: ["Posterior intercostal arteries", "Lumbar arteries", "Arteria radicularis magna", "Deep cervical artery"], a: 2},
+      {q: "6. Which spinal nerves exit above their corresponding vertebra?", choices: ["L1-L5", "T1-T12", "C1-C7", "S1-S5"], a: 2},
+      {q: "7. Filum terminale is formed by:", choices: ["Pia mater", "Arachnoid", "Dura", "Spinal cord"], a: 0},
+      {q: "8. Which level indicates cervical enlargement of spinal cord?", choices: ["C1-C3", "C3-C4", "C5-T1", "T1-T6"], a: 2},
+      {q: "9. Which structure stabilizes the cord laterally in vertebral canal?", choices: ["Filum terminale", "Coccygeal ligament", "Choroid plexus", "Denticulate ligament"], a: 3},
+      {q: "10. The most inferior area of the spinal cord is:", choices: ["Cervical enlargement", "Conus medullaris", "Lumbar enlargement", "Filum terminale"], a: 1},
+      {q: "11. A 23-year-old jockey falls and ruptures internal vertebral venous plexus. Blood collects in:", choices: ["Space deep to pia", "Subdural space", "Between arachnoid & dura", "Epidural space"], a: 3},
+      {q: "12. The spinal dura extends from the foramen magnum to which vertebral level?", choices: ["L1", "L3", "S2", "S5"], a: 2},
+      {q: "13. A 45-year-old woman reported severe lower back pain radiating down her right leg, weakness in right foot dorsiflexion. MRI showed disc herniation at L4-L5 level. Which spinal nerve root is most likely affected?", choices: ["L3", "L5", "L4", "S1"], a: 1},
+      {q: "14. CSF is normally withdrawn from which space?", choices: ["Epidural space", "Subdural space", "Subarachnoid space", "Between spinal cord & pia"], a: 2},
+      {q: "15. Which spinal artery is a branch of the vertebral artery?", choices: ["Lateral sacral", "Posterior spinal", "Posterior intercostal", "Lumbar"], a: 1},
+      {q: "16. During surgery to repair cervical fractures, which structure serves as a landmark between anterior and posterior rootlets of spinal nerves?", choices: ["Posterior longitudinal ligament", "Denticulate ligament", "Filum terminale", "Conus medullaris"], a: 1},
+      {q: "17. Which of the following isn't a content of subarachnoid space?", choices: ["CSF", "Spinal arteries", "Arachnoid trabeculae", "Internal vertebral plexus"], a: 3},
+      {q: "18. A 42-year-old woman with tumors in foramina between C4-C5 and T4-T5, which spinal nerves may be damaged?", choices: ["C4 and T4", "C4 and T5", "C5 and T5", "C5 and T4"], a: 3},
+      {q: "19. Filum terminale is an extension of:", choices: ["Dura", "Arachnoid", "Pia mater", "Denticulate"], a: 2},
+      {q: "20. Which artery supports spinal arteries?", choices: ["Ascending cervical", "Vertebral", "Lateral sacral", "Radicularis magna"], a: 3},
+      {q: "21. The stab wound in this patient injured the posterior spinal artery, what is its anatomical origin?", choices: ["Lateral sacral artery", "Vertebral artery", "Posterior intercostal artery", "Lumbar artery"], a: 1},
+      {q: "22. At which level does the subarachnoid space of the spinal cord end?", choices: ["S4", "L1", "L4", "S2"], a: 3},
+      {q: "23. What is the function of cervical enlargement?", choices: ["Connection to lumbar plexus", "Formation of brachial plexus", "Increased blood flow", "Protection of spinal cord"], a: 1},
+      {q: "24. If MRI shows lateral shift of spinal cord due to denticulate ligament tear, how many tooth-like projections do these ligaments have?", choices: ["19", "21", "28", "33"], a: 1},
+      {q: "25. In a newborn, spinal cord ends at:", choices: ["L1", "L2", "L3", "L4"], a: 2},
+      {q: "26. Regarding spinal nerves, which is TRUE?", choices: ["C6 nerve exits below C6 vertebra", "T6 nerve exits below T6 vertebra", "Sacral nerve roots shorter than cervical", "Dorsal roots contain preganglionic autonomics"], a: 1},
+      {q: "27. The ligamentum denticulatum is a thickening of:", choices: ["Epineurium", "Dura", "Arachnoid", "Pia"], a: 3},
+      {q: "28. Lumbar cistern terminates at which vertebral level?", choices: ["L1", "L3", "S2", "Last coccygeal piece"], a: 2},
+      {q: "29. Which spinal nerve emerges above C6 vertebra?", choices: ["C4", "C5", "C6", "C7"], a: 2},
+      {q: "30. The arteria radicularis magna, which supports the spinal arteries, arises from:", choices: ["Ascending cervical artery", "Lateral sacral artery", "Vertebral artery", "Lower posterior intercostal arteries"], a: 3},
+      {q: "31. Which spinal nerve exits below C6 vertebra?", choices: ["C5", "C6", "C8", "C7"], a: 3},
+      {q: "32. Which of the following places is devoid of cerebrospinal fluid?", choices: ["Subarachnoid space", "Third ventricle", "Epidural space", "Central canal of spinal cord"], a: 2},
+      {q: "33. How many cervical nerves are there compared to cervical vertebrae?", choices: ["8 nerves & 8 vertebrae", "7 nerves & 8 vertebrae", "8 nerves & 7 vertebrae", "7 nerves & 7 vertebrae"], a: 2},
+      {q: "34. A middle-aged worker injures his back after an explosion. MRI shows spinal cord shifted to the right because lateral extensions of pia mater were torn. Which structure is affected?", choices: ["Filum terminale", "Coccygeal ligament", "Denticulate ligament", "Choroid plexus"], a: 2},
+      {q: "35. MRI shows leftward displacement of spinal cord due to ligament tear. Which structure is most likely injured?", choices: ["Filum terminale", "Choroid plexus", "Coccygeal ligament", "Denticulate ligament"], a: 3},
+      {q: "36. The spinal nerve pairs are:", choices: ["29", "30", "31", "32"], a: 2},
+      {q: "37. Which structure passes between C6 & C7 vertebrae?", choices: ["Vertebral artery", "7th cervical spinal nerve", "6th cervical spinal nerve", "Vertebral vein"], a: 1},
+      {q: "38. Epidural space is present between:", choices: ["Dura & arachnoid", "Arachnoid & pia", "Arachnoid & spinal cord", "Dura mater/vertebral column"], a: 3},
+      {q: "39. The spinal cord in the adult ends inferiorly at:", choices: ["L3", "T12", "S2-S3", "L1-L2 intervertebral disc"], a: 3},
+      {q: "40. To perform lumbar puncture in an adult, the needle is introduced between:", choices: ["L4-L5", "L2-L3", "S1-L2", "T12-L1"], a: 0},
+      {q: "41. The spinal epidural space extends to which vertebral level?", choices: ["L1", "L3", "S2", "S3"], a: 2},
+      {q: "42. Where does the spinal cord begin?", choices: ["At the foramen magnum", "At the pons", "At L1 vertebra", "At the medulla oblongata"], a: 0},
+      {q: "43. The lateral horn of grey matter is present in:", choices: ["All spinal segments", "Thoracic & upper lumbar segments", "Cervical region only", "Sacral region only"], a: 1},
+      {q: "44. The white matter of spinal cord is divided into:", choices: ["2 columns", "3 columns", "4 columns", "5 columns"], a: 1},
+      {q: "45. The cauda equina consists of:", choices: ["Cervical nerve roots", "Thoracic nerves", "Lumbar except L1, sacral and coccygeal roots", "Filum terminale only"], a: 2},
+      {q: "46. The internal vertebral venous plexus communicates with:", choices: ["Prostatic venous plexus", "Azygos vein", "Portal vein", "Pulmonary veins"], a: 0},
+      {q: "47. What structure forms the tapered lower end of the spinal cord?", choices: ["Filum terminale", "Conus medullaris", "Cauda equina", "Sacral plexus"], a: 1},
+      {q: "48. How many spinal segments are present in the human spinal cord?", choices: ["30", "31", "32", "33"], a: 1},
+      {q: "49. The cervical enlargement gives rise to nerves forming the:", choices: ["Lumbar plexus", "Sacral plexus", "Brachial plexus", "Coccygeal plexus"], a: 2},
+      {q: "50. The dura mater extends down to the level of:", choices: ["L1", "L2", "S2", "Coccyx"], a: 2},
+      {q: "51. The subarachnoid space contains:", choices: ["CSF", "Venous plexus", "Fat", "Nerve roots only"], a: 0},
+      {q: "52. The anterior spinal artery supplies:", choices: ["Posterior one-third of cord", "Entire cord", "Anterior two-thirds of cord", "Only grey matter"], a: 2},
+      {q: "53. Arteria radicularis magna mainly supplies:", choices: ["Upper cervical cord", "Lower part of spinal cord", "Thoracic cord", "Cauda equina only"], a: 1},
+      {q: "54. What is the average length of the spinal cord?", choices: ["30 cm", "45 cm", "60 cm", "75 cm"], a: 1},
+      {q: "55. What is the deep midline groove along the anterior aspect of the spinal cord called?", choices: ["Anterior median sulcus", "Posterior median fissure", "Anterior median fissure", "Posterior median sulcus"], a: 2},
+      {q: "56. What is the central mass of grey matter in the spinal cord shaped like?", choices: ["H-shaped", "X-shaped", "Y-shaped", "Z-shaped"], a: 0},
+      {q: "57. What is the space between the spinal dura and arachnoid mater called?", choices: ["Subdural space", "Epidural space", "Subarachnoid space", "Intrathecal space"], a: 0},
+      {q: "58. How many longitudinal venous channels form around the spinal cord for drainage?", choices: ["2", "4", "6", "8"], a: 2},
+      {q: "59. What is the outer tough dense layer that continues with the cranial dura mater called?", choices: ["Spinal pia mater", "Spinal arachnoid mater", "Spinal dura mater", "Spinal meninges"], a: 2},
+      {q: "60. What is the thin transparent membrane that extends to the lower border of S2 vertebra called?", choices: ["Spinal pia mater", "Spinal arachnoid mater", "Spinal dura mater", "Spinal meninges"], a: 1},
+      {q: "61. What is the vascular membrane that closely invests the spinal cord called?", choices: ["Spinal pia mater", "Spinal arachnoid mater", "Spinal dura mater", "Spinal meninges"], a: 0},
+      {q: "62. What is the main function of the spinal branches of segmental arteries?", choices: ["Nourish the spinal cord", "Nourish the nerve roots", "Nourish the spinal meninges", "Nourish the spinal arteries"], a: 1},
+      {q: "63. How many pairs of cervical nerves emerge from the spinal cord?", choices: ["5", "8", "12", "16"], a: 1},
+      {q: "64. What is the widened subarachnoid space below the conus medullaris called?", choices: ["Lumbar cistern", "Filum terminale", "Cauda equina", "Denticulate ligament"], a: 0},
+      {q: "65. How many pairs of thoracic nerves emerge from the spinal cord?", choices: ["5", "8", "12", "16"], a: 2},
+      {q: "66. What is the space between the arachnoid mater and pia mater filled with?", choices: ["Blood", "Cerebrospinal fluid", "Lymph", "Mucus"], a: 1},
+      {q: "67. What is the bunch of lumbar, sacral, and coccygeal nerve roots around the filum terminale called?", choices: ["Cauda equina", "Conus medullaris", "Filum terminale", "Denticulate ligament"], a: 0},
+      {q: "68. What is the space between the spinal dura and arachnoid mater containing a thin film of serous fluid called?", choices: ["Subdural space", "Epidural space", "Subarachnoid space", "Intrathecal space"], a: 0},
+      {q: "69. What is the large radicular artery that originates from lower posterior intercostal or upper lumbar arteries called?", choices: ["Anterior spinal artery", "Posterior spinal artery", "Arteria Radicularis Magna", "Vertebral artery"], a: 2},
+      {q: "70. What is the space between the arachnoid mater and pia mater called?", choices: ["Subdural space", "Epidural space", "Subarachnoid space", "Intrathecal space"], a: 2},
+      {q: "71. All of the followings are true about spinal cord, EXCEPT:", choices: ["It lies in the upper 2/3 of vertebral column.", "Its length is 45 cm.", "It ends at level of L3 in adults.", "Its end expanded to form conus medullaris."], a: 2},
+      {q: "72. Regarding the blood supply to the spinal cord, select the correct statement:", choices: ["Anterior 2/3 of the spinal cord is supplied by the posterior spinal arteries.", "Anterior spinal arteries are reinforced in the cervical region by branches from the vertebral arteries.", "There are two anterior spinal arteries.", "The cervical region of the spinal cord is predisposed to vascular insufficiency"], a: 1},
+      {q: "73. Regarding the blood supply of the spinal cord, one of the following is TRUE:", choices: ["The posterior spinal artery supplies the anterior & lateral funiculi of the white matter.", "The arteria radicularis magna supplies the cervical enlargement.", "The internal vertebral venous plexus lies in the subdural space.", "The thoracic region of the spinal cord is more liable to ischemic necrosis if the segmental or radicular arteries are occluded."], a: 3},
+      {q: "74. Regarding the spinal cord, one of the following is TRUE:", choices: ["The spinal dura ends at the level of S4.", "It is drained by spinal and vertebral venous plexuses.", "It has three enlargements.", "The largest radicular artery is that of S2."], a: 1},
+      {q: "75. Regarding the spinal meninges, one of the following is TRUE:", choices: ["The spinal arachnoid mater ends at the level of L2.", "The spinal arteries lie in the epidural space.", "The lower part of the spinal dura forms a sheath around the filum terminale.", "The lumbar cistern extends from L1 to S3."], a: 2},
+      {q: "76. A patient presents with a loss of sensation but maintains motor function. If the lesion is localized within the 'H-shaped' grey matter of the spinal cord, which specific part is most likely affected?", choices: ["Anterior horn", "Posterior horn", "Lateral horn", "White commissure"], a: 1},
+      {q: "77. A 30-year-old male is brought to the ER after a diving accident. Imaging shows a fracture at the level of the L1 vertebra. Based on adult anatomy, what structure is most likely found at the level of the intervertebral disc between L1 and L2?", choices: ["The conus medullaris", "The beginning of the spinal cord", "The filum terminale attachment to the coccyx", "The termination of the dural sac"], a: 0},
+    ]
+  },
+  {
+    id: "csf",
+    name: "CSF Circulation (18 Questions)",
+    questions: [
+      {q: "1. A 57-year-old woman comes into her physician's office complaining of fever, nausea, vomiting, and headache. Tests suggest hydrocephalus resulting from a decrease in the absorption of CSF. A decrease of flow through which structure is responsible?", choices: ["Choroid plexus", "Subarachnoid trabeculae", "Arachnoid villi", "Vertebral venous plexus", "Internal jugular vein"], a: 2},
+      {q: "2. The arachnoid granulations responsible for cerebrospinal fluid absorption protrude mainly in the:", choices: ["Superior sagittal sinus", "Inferior sagittal sinus", "Straight sinus", "Cavernous sinus", "Transverse sinus"], a: 0},
+      {q: "3. CSF is principally secreted by:", choices: ["Arachnoid granulations", "Choroid plexus", "Floor of 4th ventricle", "Periaqueductal gray matter"], a: 1},
+      {q: "4. Flow of CSF from lateral to third ventricle is through:", choices: ["Foramen of Monro", "Foramen of Luschka", "Foramen of Magendie", "Aqueduct of Sylvius"], a: 0},
+      {q: "5. Obstruction of cerebral aqueduct would result in dilatation of which of the followings?", choices: ["Fourth ventricle", "Lateral ventricle", "Third ventricle", "Both b & c"], a: 3},
+      {q: "6. Regarding the ventricular system, one of the following is INCORRECT:", choices: ["The ependymal lining contributes to the formation and circulation of the CSF.", "It represents the cavity of the neural tube.", "It contains about 30 ml of CSF.", "Obstruction of the aqueduct of Sylvius causes dilatation of all the ventricles.", "Communicates with subarachnoid space through foramina of Luschka and Magendie."], a: 3},
+      {q: "7. The cerebrospinal fluid is returned directly to the venous system by means of the:", choices: ["Choroid plexus", "Arachnoid villi & granulations", "Cerebral veins", "None of the above"], a: 1},
+      {q: "8. The subarachnoid space communicates with ventricles via:", choices: ["Foramen of Monro", "Foramen of Sylvius", "Foramen of Magendie", "Foramen of Luschka", "c and d"], a: 4},
+      {q: "9. CSF enters the venous system through:", choices: ["Arachnoid villi", "Subarachnoid veins", "Cisterna magna", "Capillaries of the ependyma", "The end of the medullary canal of the spinal cord"], a: 0},
+      {q: "10. The lateral and medial apertures drain the fourth ventricle into which of the following sites?", choices: ["Arachnoid granulations", "Cerebellum", "Ependymal canal", "Subarachnoid space"], a: 3},
+      {q: "11. Blockage of the flow of cerebrospinal fluid (CSF) within the cerebral aqueduct (of Sylvius) normally would result in the enlargement of all of the following ventricular spaces except the:", choices: ["Fourth ventricle", "Interventricular foramen of Monro", "Lateral ventricle", "Third ventricle"], a: 0},
+      {q: "12. CSF is primarily produced by the choroid plexuses. Which of the following describes the correct flow of CSF starting from the lateral ventricles?", choices: ["Lateral ventricle -> 4th ventricle -> 3rd ventricle", "Lateral ventricle -> Foramen of Monro -> 3rd ventricle -> Cerebral Aqueduct -> 4th ventricle", "3rd ventricle -> Foramen of Magendie -> Lateral ventricle", "4th ventricle -> Cerebral Aqueduct -> 3rd ventricle"], a: 1},
+      {q: "13. What is the total volume of CSF in an adult?", choices: ["50 ml", "100 ml", "150 ml", "200 ml"], a: 2},
+      {q: "14. What percentage of CSF is produced by choroid plexuses?", choices: ["10%", "30%", "50%", "70%"], a: 3},
+      {q: "15. The greater amount of CSF exits the fourth ventricle through:", choices: ["Central canal", "Foramen of Magendie & Luschka", "Interventricular foramina", "Foramen ovale"], a: 1},
+      {q: "16. How much of the CSF volume is found in the ventricular system?", choices: ["10 ml", "20 ml", "30 ml", "50 ml"], a: 2},
+      {q: "17. Which structure adds small amounts of CSF before entering the fourth ventricle?", choices: ["Lateral ventricles", "Third ventricle", "Cerebellum", "Arachnoid villi"], a: 2},
+      {q: "18. How is cerebrospinal fluid excreted into the cranial venous sinuses?", choices: ["Arachnoid villi", "Lateral ventricles", "Choroid plexuses", "Spinal cord"], a: 0},
+    ]
+  },
+  {
+    id: "cerebrum_white_matter",
+    name: "Cerebrum White Matter (16 Questions)",
+    questions: [
+      {q: "1. What are the three types of white matter fibers in the cerebrum?", choices: ["Motor, sensory, and mixed fibers", "Association, commissural, and projection fibers", "Ascending, descending, and transverse fibers", "Cortical, subcortical, and spinal fibers"], a: 1},
+      {q: "2. Which fibers connect adjacent gyri within the same hemisphere?", choices: ["Long association fibers", "Short association fibers", "Projection fibers", "Commissural fibers"], a: 1},
+      {q: "3. Forceps minor is the fiber derived from which part of corpus callosum?", choices: ["Genu", "Rostrum", "Trunk", "Splenium"], a: 0},
+      {q: "4. What is the largest commissure of the brain?", choices: ["Anterior commissure", "Posterior commissure", "Corpus callosum", "Fornix"], a: 2},
+      {q: "5. Which artery mainly supplies most of corpus callosum?", choices: ["Middle cerebral artery", "Posterior cerebral artery", "Anterior cerebral artery", "Basilar artery"], a: 2},
+      {q: "6. A medical student is examining a brain specimen and identifies a C-shaped mass of white fibers on the medial surface connecting the two hemispheres. This structure is the:", choices: ["Internal capsule", "Corpus callosum", "Fornix", "Anterior commissure"], a: 1},
+      {q: "7. A student identifies fibers that connect the frontal lobe to the occipital lobe within the same hemisphere. These fibers are classified as:", choices: ["Commissural fibers", "Short association fibers", "Long association fibers", "Projection fibers"], a: 2},
+      {q: "8. The posterior part of the corpus callosum is thick, enlarged, and supplied by the Posterior Cerebral Artery. What is this part called?", choices: ["Rostrum", "Genu", "Trunk", "Splenium"], a: 3},
+      {q: "9. The splenium of the corpus callosum sends fibers to the occipital lobes forming:", choices: ["Forceps major", "Forceps minor", "Tapetum", "Corticospinal tract"], a: 0},
+      {q: "10. All parts of the corpus callosum are supplied by the anterior cerebral artery, EXCEPT:", choices: ["Genu", "Body", "Splenium", "Rostrum"], a: 2},
+      {q: "11. Which type of fibers connect different cortical areas within the same hemisphere?", choices: ["Commissural fibers", "Projection fibers", "Association fibers", "Spinothalamic fibers"], a: 2},
+      {q: "12. Short association fibers mainly connect:", choices: ["Adjacent gyri", "Different lobes", "Two hemispheres", "Cortex with spinal cord"], a: 0},
+      {q: "13. The anterior commissure connects:", choices: ["Parietal lobes", "Olfactory bulbs", "Occipital lobes", "Thalamic nuclei"], a: 1},
+      {q: "14. The fibers of the genu of the corpus callosum form:", choices: ["Forceps major", "Tapetum", "Forceps minor", "Internal capsule"], a: 2},
+      {q: "15. Which part of the brain connects the two cerebral hemispheres?", choices: ["Corpus callosum", "Internal capsule", "Thalamus", "Diencephalon"], a: 0},
+      {q: "16. What is the shape of the corpus callosum in sagittal section?", choices: ["C-shaped", "S-shaped", "U-shaped", "V-shaped"], a: 0},
+    ]
+  },
+  {
+    id: "internal_capsule",
+    name: "Internal Capsule (20 Questions)",
+    questions: [
+      {q: "1. A patient presents with a visual field defect. The lesion is located in the retrolentiform part of the internal capsule. This region specifically contains:", choices: ["Frontopontine fibers", "Corticospinal tract", "Posterior thalamic (Optic) radiation", "Inferior thalamic (Auditory) radiation"], a: 2},
+      {q: "2. An elderly patient has a 'lacunar stroke' affecting the posterior limb of the internal capsule. The arterial branch most likely blocked is the:", choices: ["Anterior Choroidal Artery", "Anterior Communicating Artery", "Ophthalmic Artery", "Pontine Arteries"], a: 0},
+      {q: "3. A 55-year-old male has a stroke involving the Anterior Choroidal Artery. It supplies which part of the internal capsule?", choices: ["Anterior limb", "Genu", "Posterior limb (inferior part) / Retrolentiform part", "Anterior limb and Genu"], a: 2},
+      {q: "4. A medical student identifies the Corpus Striatum in a brain specimen. This structure appears striated due to bands of grey matter connecting which two nuclei across the internal capsule?", choices: ["Caudate and Thalamus", "Putamen and Globus Pallidus", "Caudate and Putamen", "Thalamus and Lentiform"], a: 2},
+      {q: "5. Acoustic radiation fibers in the internal capsule are located in:", choices: ["Anterior limb", "Genu", "Posterior limb", "Retrolentiform part", "Sublentiform part"], a: 4},
+      {q: "6. Which of the following parts of the internal capsule are associated with acoustic radiation?", choices: ["Lenticulo-thalamic part", "Sub-lentiform", "Retro-lentiform", "Anterior limb", "Genu"], a: 1},
+      {q: "7. Retrolentiform part of internal capsule includes:", choices: ["Parietopontine fibers", "Optic radiations", "Occipitopontine fibers", "All of the above", "None of the above"], a: 3},
+      {q: "8. Genu of internal capsule has:", choices: ["Sensory fibers from thalamus to brain", "Motor fibers to lower limb", "Motor fibers to upper limb", "Motor fibers to trunk", "Motor fibers to head and neck"], a: 4},
+      {q: "9. Corticospinal fibers are:", choices: ["Association fibers", "Projection fibers", "Ascending fibers", "Commissural fibers"], a: 1},
+      {q: "10. Corticonuclear fibers in the internal capsule are located in:", choices: ["Anterior limb", "Genu", "Posterior limb", "Retrolentiform part", "Sublentiform part"], a: 1},
+      {q: "11. Regarding anterior limb of internal capsules all is true, EXCEPT:", choices: ["Lies between caudate nucleus laterally & lentiform medially", "Contains anterior thalamic radiations", "Contains frontopontine fibers", "Its upper 1/2 is supplied by middle cerebral artery", "Its lower 1/2 is supplied by anterior cerebral artery"], a: 0},
+      {q: "12. Which is the thalamic surface related to posterior limb of internal capsule?", choices: ["Superior", "Inferior", "Lateral", "None of the above"], a: 2},
+      {q: "13. One of the following structures belongs to the visual pathway:", choices: ["Sublenticular part of internal capsule", "Retrolenticular part of internal capsule", "Inferior colliculus", "Medial geniculate body"], a: 1},
+      {q: "14. The internal capsule lies between which structures?", choices: ["Thalamus & lentiform nucleus medially", "Caudate nucleus & lentiform nucleus medially", "Thalamus & caudate nucleus medially", "Putamen & thalamus medially"], a: 2},
+      {q: "15. The anterior limb of the internal capsule lies between:", choices: ["Thalamus and posterior lentiform nucleus", "Caudate head and anterior lentiform nucleus", "Caudate tail and thalamus", "Putamen and thalamus"], a: 1},
+      {q: "16. The genu contains:", choices: ["Corticospinal tract", "Fronto-pontine fibers", "Corticobulbar fibers", "Optic radiation"], a: 2},
+      {q: "17. The posterior limb contains all, EXCEPT:", choices: ["Corticospinal tract", "Superior thalamic radiation", "Parieto-pontine fibers", "Auditory radiation"], a: 3},
+      {q: "18. The retrolentiform part contains:", choices: ["Inferior thalamic radiation", "Occipito-tectal fibers", "Corticobulbar fibers", "Fronto-pontine fibers"], a: 1},
+      {q: "19. The arterial supply of the posterior limb includes:", choices: ["Anterior cerebral artery", "Middle cerebral artery & anterior choroidal artery", "Internal carotid artery only", "Posterior cerebral artery"], a: 1},
+      {q: "20. Corona radiata refers to:", choices: ["Fan-like radiation of fibers from the internal capsule", "Fibers below lentiform nucleus", "Optic radiation pathway", "Corticobulbar decussation"], a: 0},
+    ]
+  },
+  {
+    id: "fourth_ventricle",
+    name: "Fourth Ventricle (20 Questions)",
+    questions: [
+      {q: "1. The lateral and medial apertures drain the fourth ventricle into:", choices: ["Arachnoid granulations", "Cerebellum", "Ependymal canal", "Sub-arachnoid space"], a: 3},
+      {q: "2. The choroid plexus of the fourth ventricle is derived from which artery?", choices: ["Anterior inferior cerebellar", "Posterior inferior cerebellar", "Anterior cerebral", "Posterior cerebral"], a: 1},
+      {q: "3. Which structure separates the two parts of the floor of the 4th ventricle?", choices: ["Vagal trigone", "Stria medullaris", "Medial eminence", "Inferior fovea"], a: 1},
+      {q: "4. Concerning the 4th ventricle, the facial colliculus overlies:", choices: ["Oculomotor nucleus", "Abducent nucleus", "Cochlear nucleus", "Facial nucleus"], a: 1},
+      {q: "5. Fluid in the lateral ventricles flows through the interventricular foramen to the third ventricle, then through the cerebral aqueduct to which structure?", choices: ["Fourth ventricle", "Spinal canal", "Lumbar cistern", "Subarachnoid space around spinal cord"], a: 0},
+      {q: "6. These cranial nerve nuclei are present in the floor of the 4th ventricle, EXCEPT:", choices: ["Abducent nucleus", "Facial nucleus in the facial colliculus", "Dorsal motor nucleus of vagus", "Hypoglossal nucleus"], a: 1},
+      {q: "7. CSF is principally secreted by:", choices: ["Arachnoid granulation", "Choroid plexus", "Straight sinus", "Subarachnoid trabeculae"], a: 1},
+      {q: "8. The following are foramina present in the fourth ventricle, EXCEPT:", choices: ["Foramen of Magendie (median)", "Foramen of Luschka (lateral)", "Cerebral aqueduct", "Interventricular foramen"], a: 3},
+      {q: "9. Which of the following is a feature of the floor of the 4th ventricle?", choices: ["Infundibulum", "Vagal trigone", "Mammillary body", "Tuber cinereum"], a: 1},
+      {q: "10. Which structures make up the facial colliculus?", choices: ["Facial nerve only", "Facial nucleus only", "Facial & vagus", "Facial nerve & abducent nucleus"], a: 3},
+      {q: "11. A 55-year-old man exhibited left-sided tongue weakness. Imaging revealed lesion on the floor of the fourth ventricle. Which structure is injured?", choices: ["Nucleus ambiguous", "Dorsal vagal nucleus", "Hypoglossal trigone", "Facial colliculus"], a: 2},
+      {q: "12. Foramen of Magendie connects the 4th ventricle with:", choices: ["Closed medulla", "Subarachnoid space", "3rd ventricle", "Dural venous sinuses"], a: 1},
+      {q: "13. Cerebral aqueduct connects which of the following?", choices: ["Cerebellum & midbrain", "Cerebellum & pons", "Third ventricle & fourth ventricle", "Fourth ventricle & subarachnoid space"], a: 2},
+      {q: "14. During a neurological exam of the floor of the fourth ventricle, a 'facial colliculus' is identified. This swelling is produced by the looping of the facial nerve around which nucleus?", choices: ["Vagal nucleus", "Abducent nucleus", "Hypoglossal nucleus", "Vestibular nucleus"], a: 1},
+      {q: "15. The shape of the fourth ventricle is described as:", choices: ["Oval cavity", "Tent-like cavity", "Circular cavity", "Triangular cavity"], a: 1},
+      {q: "16. The fourth ventricle is located:", choices: ["Behind the cerebellum", "In front of the medulla only", "Behind the pons and upper medulla", "In front of the cerebellum and behind the pons"], a: 3},
+      {q: "17. The foramen of Magendie is located in:", choices: ["Upper roof", "Middle roof", "Lower roof", "Floor of the ventricle"], a: 2},
+      {q: "18. The facial colliculus is produced by:", choices: ["Hypoglossal nucleus", "Facial nerve looping around abducent nucleus", "Vagal nucleus", "Vestibular nuclei"], a: 1},
+      {q: "19. The cerebellar recess is:", choices: ["Lateral extension", "Posterior extension into cerebellar white core", "Inferior extension", "Superior extension"], a: 1},
+      {q: "20. The fourth ventricle communicates above with the third ventricle via:", choices: ["Central canal", "Foramen of Magendie", "Aqueduct of Sylvius", "Luschka foramina"], a: 2},
+    ]
+  },
+  {
+    id: "third_ventricle",
+    name: "Third Ventricle (8 Questions)",
+    questions: [
+      {q: "1. A 61-year-old woman had headaches and dizziness. A CT scan shows a thalamic glioma on her lateral surface. Which structure is most likely damaged?", choices: ["The internal capsule", "The 3rd ventricle", "Lateral geniculate body", "The subthalamus"], a: 0},
+      {q: "2. Epithalamus is formed of:", choices: ["Pineal body", "Habenular nuclei", "Posterior commissure", "All of the above", "A & B only"], a: 3},
+      {q: "3. A patient has a tumor compressing the medial surface of the thalamus. This surface forms the lateral wall of which ventricular cavity?", choices: ["Lateral Ventricle", "Third Ventricle", "Fourth Ventricle", "Terminal Ventricle"], a: 1},
+      {q: "4. The third ventricle is located between which major brain structures?", choices: ["Two cerebellar hemispheres", "Two thalami and part of hypothalamus", "Two frontal lobes", "Pons and medulla"], a: 1},
+      {q: "5. The third ventricle communicates with the lateral ventricles through:", choices: ["Cerebral aqueduct", "Foramen magnum", "Interventricular foramen of Monro", "Optic canal"], a: 2},
+      {q: "6. Which structure forms part of the anterior wall of the third ventricle?", choices: ["Pineal gland", "Mammillary bodies", "Anterior commissure", "Posterior perforated substance"], a: 2},
+      {q: "7. The floor of the third ventricle includes all of the following, EXCEPT:", choices: ["Optic chiasma", "Infundibulum", "Mammillary bodies", "Splenium of corpus callosum"], a: 3},
+      {q: "8. The choroid plexus of the third ventricle is supplied by:", choices: ["Middle cerebral artery", "Anterior choroidal and posterior cerebral arteries", "Basilar artery only", "Superior cerebellar artery"], a: 1},
+    ]
+  },
+  {
+    id: "lateral_ventricle",
+    name: "Lateral Ventricle (8 Questions)",
+    questions: [
+      {q: "1. How many lateral ventricles are present in the human brain?", choices: ["One", "Two", "Three", "Four"], a: 1},
+      {q: "2. The anterior horn of the lateral ventricle extends into which lobe of the brain?", choices: ["Frontal lobe", "Parietal lobe", "Temporal lobe", "Occipital lobe"], a: 0},
+      {q: "3. The inferior horn of the lateral ventricle is:", choices: ["The smallest horn, located in the occipital lobe", "A forward projection into the frontal lobe", "The largest horn, extending into the temporal lobe", "The part that connects directly to the 3rd ventricle"], a: 2},
+      {q: "4. The lateral ventricles communicate with the 3rd ventricle through which structure?", choices: ["Cerebral aqueduct", "Interventricular foramen of Monro", "Central canal", "Foramen magnum"], a: 1},
+      {q: "5. Which part of the lateral ventricle lies mostly within the parietal lobe?", choices: ["Anterior horn", "Central part", "Posterior horn", "Inferior horn"], a: 1},
+      {q: "6. MRI imaging of a patient with hydrocephalus reveals a blockage at the interventricular foramen (of Monro). The posterior boundary of this foramen is formed by which thalamic structure?", choices: ["Pulvinar", "Tubercle of the thalamus (Anterior end)", "Lateral geniculate body", "Medial geniculate body"], a: 1},
+      {q: "7. The inferior horn of the lateral ventricle extends into which lobe?", choices: ["Frontal lobe", "Parietal lobe", "Temporal lobe", "Occipital lobe"], a: 2},
+      {q: "8. The central part of the lateral ventricle extends from the interventricular foramen to:", choices: ["Optic chiasma", "Splenium of corpus callosum", "Pineal gland", "Lamina terminalis"], a: 1},
+    ]
+  },
+  {
+    id: "cerebellum",
+    name: "Cerebellum (12 Questions)",
+    questions: [
+      {q: "1. Which cerebellar peduncle acts as the main bridge connecting the cerebellum to the pons?", choices: ["Inferior cerebellar peduncle", "Middle cerebellar peduncle", "Superior cerebellar peduncle", "None of the above"], a: 1},
+      {q: "2. Which of the following fiber types is most abundant in the middle cerebellar peduncle?", choices: ["Olivocerebellar fibers", "Cerebelloolivary fibers", "Pontocerebellar fibers", "Cerebellothalamic fibers"], a: 2},
+      {q: "3. If you imagine the cerebellar peduncles as 'highways,' which one would carry outgoing traffic from the cerebellum to the upper brain regions?", choices: ["Inferior cerebellar peduncle", "Middle cerebellar peduncle", "Superior cerebellar peduncle", "All carry outgoing traffic equally"], a: 2},
+      {q: "4. The inferior cerebellar peduncle contributes to which boundary of the 4th ventricle?", choices: ["Upper lateral boundary", "Lower lateral boundary", "Roof", "Floor"], a: 0},
+      {q: "5. The superior cerebellar peduncle mainly carries:", choices: ["Afferent fibers from the spinal cord", "Efferent fibers to the red nucleus and thalamus", "Afferent fibers from the medulla", "Mixed fibers from the pons"], a: 1},
+      {q: "6. Which cerebellar peduncle connects the cerebellum with the medulla?", choices: ["Superior cerebellar peduncle", "Middle cerebellar peduncle", "Inferior cerebellar peduncle", "None of the above"], a: 2},
+      {q: "7. What is the largest cerebellar peduncle?", choices: ["Superior cerebellar peduncle", "Middle cerebellar peduncle", "Inferior cerebellar peduncle", "All are equal"], a: 1},
+      {q: "8. Concerning the cerebellum; choose the most correct answer:", choices: ["Related to the mastoid air cells.", "Related to the cavernous sinus.", "It is a part of forebrain.", "Is related to the 3rd ventricle."], a: 0},
+      {q: "9. Select the correct statement about the cerebellum:", choices: ["The cerebellum has two surfaces; upper and lower.", "The cerebellum has two lobes; anterior and posterior.", "The anterior notch is occupied by the falx cerebri.", "The flocculus is a small part of the cerebral hemisphere."], a: 0},
+      {q: "10. A neurologist is assessing a patient with a cerebellar lesion. The cerebellum communicates with the medulla oblongata via the inferior cerebellar peduncle. This peduncle contains which specific fibers?", choices: ["Pontocerebellar fibers", "Olivocerebellar fibers", "Dentatothalamic fibers", "Frontopontine fibers"], a: 1},
+      {q: "11. A patient has a blockage of the Superior Cerebellar Artery. This artery supplies the:", choices: ["Inferior surface of the cerebellum", "Medulla oblongata", "Superior surface of the cerebellum", "Pons only"], a: 2},
+      {q: "12. A neuropathologist identifies the largest of the cerebellar nuclei, which appears as a 'crenated sac' opening anteromedially. This is the:", choices: ["Fastigial nucleus", "Globosus nucleus", "Emboliform nucleus", "Dentate nucleus"], a: 3},
+    ]
+  },
+];
+
+let activeQuestions = [];
+let index = 0, answers = {};
+const $ = id => document.getElementById(id);
+
+function initSetup() {
+  const container = $('topics-list');
+  if (!container) return;
+  container.innerHTML = '';
+  allChapters.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'topic-item';
+    div.innerHTML = `
+      <label style="display:flex;align-items:center;gap:14px;width:100%;cursor:pointer;">
+        <input type="checkbox" value="${t.id}" checked>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:16px;color:var(--text);">${t.name}</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:2px;">${t.questions.length} questions available</div>
+        </div>
+      </label>
+    `;
+    container.appendChild(div);
+  });
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'select-all') {
+    document.querySelectorAll('#topics-list input').forEach(cb => cb.checked = true);
+  }
+  if (e.target && e.target.id === 'clear-all') {
+    document.querySelectorAll('#topics-list input').forEach(cb => cb.checked = false);
+  }
+  if (e.target && e.target.id === 'start-btn') {
+    const selectedIds = Array.from(document.querySelectorAll('#topics-list input:checked')).map(cb => cb.value);
+    if (selectedIds.length === 0) {
+      alert('الرجاء اختيار فصل واحد على الأقل لبدء الاختبار!');
+      return;
+    }
+    
+    activeQuestions = [];
+    selectedIds.forEach(id => {
+      const topic = allChapters.find(t => t.id === id);
+      if (topic) activeQuestions.push(...topic.questions);
+    });
+
+    index = 0;
+    answers = {};
+
+    $('setup-view').classList.add('hidden');
+    $('quiz-view').classList.remove('hidden');
+    $('result-view').classList.add('hidden');
+    $('badge-count').textContent = `${activeQuestions.length} Questions Selected`;
+    renderQuiz();
+  }
+  if (e.target && e.target.id === 'back-setup') {
+    $('quiz-view').classList.add('hidden');
+    $('setup-view').classList.remove('hidden');
+  }
+  if (e.target && e.target.id === 'prev') {
+    if (index > 0) { index--; renderQuiz(); }
+  }
+  if (e.target && e.target.id === 'next') {
+    if (index < activeQuestions.length - 1) { index++; renderQuiz(); } else { finishQuiz(); }
+  }
+  if (e.target && e.target.id === 'finish') {
+    finishQuiz();
+  }
+  if (e.target && e.target.id === 'again') {
+    $('result-view').classList.add('hidden');
+    $('setup-view').classList.remove('hidden');
+  }
+});
+
+function renderQuiz() {
+  const item = activeQuestions[index], chosen = answers[index];
+  $('qmeta').textContent = `QUESTION ${index + 1} / ${activeQuestions.length}`;
+  $('question').textContent = item.q;
+  const optContainer = $('options');
+  optContainer.innerHTML = '';
+  
+  item.choices.forEach((choice, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt'; b.type = 'button';
+    const letter = document.createElement('span'); letter.className = 'letter'; letter.textContent = String.fromCharCode(65 + i);
+    const label = document.createElement('span'); label.textContent = choice;
+    b.append(letter, label);
+    
+    if (chosen !== undefined) {
+      b.disabled = true;
+      if (i === item.a) b.classList.add('correct');
+      if (i === chosen && chosen !== item.a) b.classList.add('wrong');
+    }
+    b.addEventListener('click', () => {
+      if (answers[index] === undefined) {
+        answers[index] = i;
+        renderQuiz();
+      }
+    });
+    optContainer.append(b);
+  });
+
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  if (chosen !== undefined) {
+    fb.textContent = chosen === item.a ? 'Correct answer ✓' : `Incorrect. Correct answer: ${String.fromCharCode(65 + item.a)}. ${item.choices[item.a]}`;
+    fb.className = chosen === item.a ? 'feedback good' : 'feedback bad';
+  }
+  $('prev').disabled = index === 0;
+  $('next').textContent = index === activeQuestions.length - 1 ? 'View results →' : 'Next →';
+  updateStats();
+}
+
+function updateStats() {
+  const n = Object.keys(answers).length;
+  const c = Object.keys(answers).filter(k => answers[k] === activeQuestions[k].a).length;
+  $('answered').textContent = n;
+  $('correct').textContent = c;
+  $('percent').textContent = (n ? Math.round(c / n * 100) : 0) + '%';
+  $('bar').style.width = (n / activeQuestions.length * 100) + '%';
+}
+
+function finishQuiz() {
+  const n = Object.keys(answers).length;
+  const c = Object.keys(answers).filter(k => answers[k] === activeQuestions[k].a).length;
+  $('quiz-view').classList.add('hidden');
+  $('result-view').classList.remove('hidden');
+  $('summary').textContent = `You answered ${n} of ${activeQuestions.length} questions. Score: ${c} / ${activeQuestions.length} (${Math.round(c / activeQuestions.length * 100)}%).`;
+  
+  $('review').innerHTML = '<h3>Review</h3>' + activeQuestions.map((q, i) => {
+    const a = answers[i];
+    return `<div class="review-item"><small>Question ${i + 1} · ${a === undefined ? 'Not answered' : a === q.a ? 'Correct' : 'Incorrect'}</small><strong>${escapeHtml(q.q)}</strong><div>${a === undefined ? 'No answer selected' : `Your answer: ${escapeHtml(q.choices[a])}`}</div><div style="color:var(--green)">Correct: ${escapeHtml(q.choices[q.a])}</div></div>`;
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSetup);
+} else {
+  initSetup();
+}
+</script>
+</body>
+</html>
