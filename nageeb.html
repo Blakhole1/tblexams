@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dr.Nageeb TBL Complete Exam</title>
+<style>
+:root{color-scheme:dark;--bg:#0d141b;--panel:#17232d;--line:#30414e;--text:#edf3f7;--muted:#9fb0bc;--accent:#75b7ec;--green:#42c99a;--red:#ff7777}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#1b2b39 0,#0d141b 58%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:780px;margin:auto;padding:22px 15px 50px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+h1{font-size:clamp(20px,4.5vw,28px);letter-spacing:-0.5px;margin:4px 0 5px}.sub{color:var(--muted);font-size:14px}
+.badge{border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--accent);font-size:13px;white-space:nowrap}
+.card{background:linear-gradient(145deg,#1b2934,#14202a);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 36px #0004}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:11px;text-align:center}.stat b{display:block;font-size:20px}.stat span{font-size:12px;color:var(--muted)}
+.progress{height:7px;background:#26343f;border-radius:9px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}
+.qmeta{color:var(--accent);font-size:13px;font-weight:700;margin-bottom:10px}.question{font-size:19px;line-height:1.4;font-weight:650;margin:0 0 18px}
+.options{display:grid;gap:10px}.opt{width:100%;text-align:left;border:1px solid var(--line);background:#202f3a;color:var(--text);border-radius:12px;padding:13px 14px;display:flex;gap:12px;align-items:flex-start;transition:.15s;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent);background:#263a49}.letter{flex:0 0 26px;height:26px;border-radius:8px;background:#314453;display:grid;place-items:center;font-weight:700;color:#d6e7f4;font-size:13px}.opt.correct{border-color:var(--green);background:#15372f}.opt.wrong{border-color:var(--red);background:#3b2428}.opt:disabled{cursor:default;opacity:1}
+.feedback{min-height:28px;margin:14px 0 0;font-weight:650}
+.feedback.good{color:var(--green)}
+.feedback.bad{color:var(--red)}
+.controls{display:flex;justify-content:space-between;gap:10px;margin-top:18px}.btn{border:1px solid var(--line);border-radius:11px;padding:10px 16px;background:#243440;color:var(--text);font-weight:650;cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#10202b}.btn:disabled{opacity:.35;cursor:not-allowed}
+.tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.tools .btn{font-size:13px;padding:8px 12px}
+.hidden{display:none}.result h2{margin-top:0}.review-item{border-top:1px solid var(--line);padding:12px 0}.review-item small{color:var(--muted)}.review-item strong{display:block;margin:4px 0}
+@media(max-width:480px){.wrap{padding:16px 11px 35px}.card{padding:16px}.question{font-size:17px}.stats{gap:6px}.stat{padding:9px 4px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+  <div>
+    <h1>Dr.Nageeb TBL Complete Exam</h1>
+    <div class="sub">Unified CNS Sensory Disturbance Exam · 25 Questions</div>
+  </div>
+  <div class="badge">25 Questions</div>
+</header>
+
+<section class="card" id="quiz">
+<section class="stats">
+  <div class="stat"><b id="answered">0</b><span>Answered</span></div>
+  <div class="stat"><b id="correct">0</b><span>Correct</span></div>
+  <div class="stat"><b id="percent">0%</b><span>Accuracy</span></div>
+</section>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="qmeta" id="qmeta"></div>
+<p class="question" id="question"></p>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="controls">
+  <button class="btn" id="prev">← Previous</button>
+  <button class="btn primary" id="next">Next →</button>
+</div>
+<div class="tools">
+  <button class="btn" id="finish">Finish exam</button>
+  <button class="btn" id="reset">Reset</button>
+</div>
+</section>
+
+<section class="card result hidden" id="result">
+<h2>Quiz Result</h2>
+<p id="summary"></p>
+<div id="review"></div>
+<div class="tools">
+  <button class="btn primary" id="again">Try again</button>
+  <button class="btn" id="back">Back to questions</button>
+</div>
+</section>
+</main>
+
+<script>
+const questions = [
+  {q: "151. Which lesion occurs in tabes dorsalis?", choices: ["Degeneration of dorsal root fibers central to the ganglia", "Compression of the corticobulbar tract alone", "Destruction of the primary visual cortex", "Degeneration of anterior horn cells alone"], a: 0},
+  {q: "152. Why may a patient with tabes dorsalis fall when closing the eyes?", choices: ["Closing the eyes paralyzes the lower limbs", "Visual compensation for lost proprioception is removed", "Closing the eyes abolishes all vestibular activity", "Visual closure blocks the intact motor nerves"], a: 1},
+  {q: "153. What explains the stamping gait of tabes dorsalis?", choices: ["The patient has selective loss of hearing", "The patient has isolated paralysis of speech muscles", "The patient attempts to feel the ground despite impaired limb awareness", "The patient has excessive visual guidance of the feet"], a: 2},
+  {q: "154. Which sensory pattern is characteristic of syringomyelia?", choices: ["Isolated loss of conscious proprioception below the lesion", "Isolated facial vibration loss with preserved pain", "Complete unilateral sensory loss throughout the body", "Bilateral segmental pain and temperature loss with preserved fine touch"], a: 3},
+  {q: "155. Which fibers are compressed early by a central spinal syrinx?", choices: ["Optic radiation fibers", "Corticobulbar fibers in the genu", "Dorsal column fibers in the medulla", "Crossing spinothalamic fibers"], a: 3},
+  {q: "156. Which lesion produces Brown-Sequard syndrome?", choices: ["A unilateral cerebellar lesion", "Hemisection of the spinal cord", "An isolated thalamic lesion", "Complete transverse spinal cord injury"], a: 1},
+  {q: "157. Which sensory deficit occurs ipsilateral to a spinal hemisection below the lesion?", choices: ["Loss of hearing and vision", "Loss of smell and taste", "Loss of pain and temperature alone", "Loss of fine touch and proprioception"], a: 3},
+  {q: "158. Which deficit occurs contralateral to a spinal hemisection below the lesion?", choices: ["Loss of fine touch and position sense", "Loss of vibration alone", "Loss of pain and temperature", "Loss of all sensation at the lesion level"], a: 2},
+  {q: "159. Which finding characterizes thalamic hyperpathia?", choices: ["Fine touch recovers with improved localization", "Proprioception recovers before all other sensations", "Strong stimuli produce poorly localized, excessive pain", "Pain is permanently absent despite strong stimulation"], a: 2},
+  {q: "160. Which emotional disturbance may occur in thalamic syndrome?", choices: ["Isolated loss of visual acuity", "Excessive unpleasant or pleasant feelings", "Loss of the patellar tendon response alone", "Isolated paralysis of tongue muscles"], a: 1},
+  {q: "161. Which sensory deficit can follow a unilateral internal capsule hemorrhage?", choices: ["Bilateral glove-and-stocking loss", "Ipsilateral facial anesthesia alone", "An isolated segmental jacket-shaped loss", "Contralateral hemianesthesia"], a: 3},
+  {q: "162. Which distribution suggests peripheral neuritis?", choices: ["Loss limited to one spinal dermatome", "Glove-and-stocking sensory loss", "A jacket-shaped sensory deficit", "Loss throughout one half of the body"], a: 1},
+  {q: "163. What causes headache following persistent CSF leakage after dural puncture?", choices: ["Increased pressure in the middle ear", "Reduced brain support with traction on pain-sensitive structures", "Increased CSF production with ventricular expansion", "Selective activation of cutaneous vibration receptors"], a: 1},
+  {q: "164. Where is pain from structures below the tentorium typically referred?", choices: ["The frontal region", "The right shoulder", "The occipital region", "The umbilical region"], a: 2},
+  {q: "165. Which intracranial structure is pain-sensitive?", choices: ["The substance of a cerebral gyrus", "A dural venous sinus", "Brain parenchyma", "An isolated cortical neuron"], a: 1},
+  {q: "166. Which change supports a low-CSF-pressure mechanism for headache?", choices: ["No relationship to posture with isolated finger pain", "Relief only after passive knee movement", "Worsening upright and relief when lying down", "Worsening only when lying down"], a: 2},
+  {q: "167. Which pattern is expected with high-CSF-pressure headache?", choices: ["Headache consistently relieved by ordinary analgesics", "Persistent dull headache with vomiting and reduced heart rate", "Brief skin pain triggered by a pinprick", "Headache limited to standing after dural puncture"], a: 1},
+  {q: "168. Which symptom combination is characteristic of migraine?", choices: ["Brief calf pain confined to muscular exercise", "Jacket-shaped pain loss with preserved fine touch", "Glove-and-stocking numbness with distal weakness", "Unilateral throbbing pain with nausea and light sensitivity"], a: 3},
+  {q: "169. Which visual experience may occur during migraine aura?", choices: ["Fixed loss of both pupillary reflexes", "Flashes or bright spots", "Progressive loss of all color vision only", "Permanent destruction of the retina"], a: 1},
+  {q: "170. Which headache mechanism is associated with severe hypertension?", choices: ["Loss of CSF through a dural puncture", "Traction from reduced brain buoyancy", "Inflammation confined to the middle ear", "Stretch of cerebral vessels"], a: 3},
+  {q: "171. Which condition is an extracranial cause of headache?", choices: ["An intracranial tumor", "Meningitis", "Nasal sinusitis", "Low CSF pressure"], a: 2},
+  {q: "172. How long does an untreated migraine attack usually last?", choices: ["5-60 seconds", "Several months continuously", "4-72 hours", "1-2 minutes"], a: 2},
+  {q: "173. Why can a thalamic sensory lesion produce ataxia?", choices: ["Selective paralysis of ocular muscles", "Selective loss of cutaneous temperature alone", "Isolated loss of auditory discrimination", "Loss of proprioceptive information"], a: 3},
+  {q: "174. Which combination suggests meningitis-related headache?", choices: ["Fever with neck muscle spasm", "Glove-and-stocking sensory loss", "Calf ischemia with exercise", "Loss of stereognosis without headache"], a: 0},
+  {q: "175. Which procedure treats persistent CSF leakage causing post-dural-puncture headache?", choices: ["An epidural blood patch", "A test of tactile discrimination", "Transcutaneous stimulation of a limb", "Correction of a refractive error"], a: 0}
+];
+
+let index = 0, answers = {};
+const $ = id => document.getElementById(id);
+
+function render() {
+  const item = questions[index], chosen = answers[index];
+  $('qmeta').textContent = `QUESTION ${index + 1} / ${questions.length}`;
+  $('question').textContent = item.q;
+  $('options').innerHTML = '';
+
+  item.choices.forEach((choice, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.type = 'button';
+    const letter = document.createElement('span');
+    letter.className = 'letter';
+    letter.textContent = String.fromCharCode(65 + i);
+    const label = document.createElement('span');
+    label.textContent = choice;
+    b.append(letter, label);
+
+    if (chosen !== undefined) {
+      b.disabled = true;
+      if (i === item.a) b.classList.add('correct');
+      if (i === chosen && chosen !== item.a) b.classList.add('wrong');
+    }
+
+    b.addEventListener('click', () => {
+      if (answers[index] === undefined) {
+        answers[index] = i;
+        render();
+      }
+    });
+    $('options').append(b);
+  });
+
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  if (chosen !== undefined) {
+    fb.textContent = chosen === item.a
+      ? 'Correct answer ✓'
+      : `Incorrect. Correct answer: ${String.fromCharCode(65 + item.a)}. ${item.choices[item.a]}`;
+    fb.className = chosen === item.a ? 'feedback good' : 'feedback bad';
+  } else {
+    fb.textContent = '';
+  }
+
+  $('prev').disabled = index === 0;
+  $('next').textContent = index === questions.length - 1 ? 'View results →' : 'Next →';
+  updateStats();
+}
+
+function updateStats() {
+  const n = Object.keys(answers).length;
+  const c = Object.keys(answers).filter(k => answers[k] === questions[k].a).length;
+  $('answered').textContent = n;
+  $('correct').textContent = c;
+  $('percent').textContent = (n ? Math.round(c / n * 100) : 0) + '%';
+  $('bar').style.width = (n / questions.length * 100) + '%';
+}
+
+function finish() {
+  const n = Object.keys(answers).length;
+  const c = Object.keys(answers).filter(k => answers[k] === questions[k].a).length;
+  $('quiz').classList.add('hidden');
+  $('result').classList.remove('hidden');
+  $('summary').textContent = `You answered ${n} of ${questions.length} questions. Score: ${c} / ${questions.length} (${Math.round(c / questions.length * 100)}%).`;
+  $('review').innerHTML = '<h3>Review</h3>' + questions.map((q, i) => {
+    const a = answers[i];
+    return `<div class="review-item"><small>Question ${i + 1} · ${a === undefined ? 'Not answered' : a === q.a ? 'Correct' : 'Incorrect'}</small><strong>${escapeHtml(q.q)}</strong><div>${a === undefined ? 'No answer selected' : `Your answer: ${escapeHtml(q.choices[a])}`}</div><div style="color:var(--green)">Correct: ${escapeHtml(q.choices[q.a])}</div></div>`;
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+$('prev').onclick = () => { if (index > 0) { index--; render(); } };
+$('next').onclick = () => { if (index < questions.length - 1) { index++; render(); } else { finish(); } };
+$('finish').onclick = finish;
+$('reset').onclick = () => { if (confirm('Clear all answers?')) { answers = {}; index = 0; render(); } };
+$('again').onclick = () => { answers = {}; index = 0; $('result').classList.add('hidden'); $('quiz').classList.remove('hidden'); render(); };
+$('back').onclick = () => { $('result').classList.add('hidden'); $('quiz').classList.remove('hidden'); render(); };
+
+render();
+</script>
+</body>
+</html>
