@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wagih- Elhussiny interactive notebook questions</title>
+<style>
+:root{color-scheme:dark;--bg:#0d141b;--panel:#17232d;--panel2:#1d2b36;--line:#30414e;--text:#edf3f7;--muted:#9fb0bc;--accent:#75b7ec;--green:#42c99a;--red:#ff7777}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#1b2b39 0,#0d141b 58%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:780px;margin:auto;padding:22px 15px 50px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+h1{font-size:clamp(20px,4.5vw,28px);letter-spacing:-0.5px;margin:4px 0 5px}.sub{color:var(--muted);font-size:14px}
+.badge{border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--accent);font-size:13px;white-space:nowrap}
+.card{background:linear-gradient(145deg,#1b2934,#14202a);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 36px #0004;margin-bottom:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:11px;text-align:center}.stat b{display:block;font-size:20px}.stat span{font-size:12px;color:var(--muted)}
+.progress{height:7px;background:#26343f;border-radius:9px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}
+.qmeta{color:var(--accent);font-size:13px;font-weight:700;margin-bottom:10px}.question{font-size:19px;line-height:1.4;font-weight:650;margin:0 0 18px}
+.options{display:grid;gap:10px}.opt{width:100%;text-align:left;border:1px solid var(--line);background:#202f3a;color:var(--text);border-radius:12px;padding:13px 14px;display:flex;gap:12px;align-items:flex-start;transition:.15s;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent);background:#263a49}.letter{flex:0 0 26px;height:26px;border-radius:8px;background:#314453;display:grid;place-items:center;font-weight:700;color:#d6e7f4;font-size:13px}.opt.correct{border-color:var(--green);background:#15372f}.opt.wrong{border-color:var(--red);background:#3b2428}.opt:disabled{cursor:default;opacity:1}
+.feedback{min-height:28px;margin:14px 0 0;font-weight:650}
+.feedback.good{color:var(--green)}
+.feedback.bad{color:var(--red)}
+.controls{display:flex;justify-content:space-between;gap:10px;margin-top:18px}.btn{border:1px solid var(--line);border-radius:11px;padding:10px 16px;background:#243440;color:var(--text);font-weight:650;cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#10202b}.btn:disabled{opacity:.35;cursor:not-allowed}
+.tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.tools .btn{font-size:13px;padding:8px 12px}
+.topic-item{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;cursor:pointer;transition:.15s}
+.topic-item:hover{border-color:var(--accent);background:var(--panel2)}
+.topic-item input{width:20px;height:20px;accent-color:var(--accent);cursor:pointer}
+.actions-bar{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.hidden{display:none!important}
+.result h2{margin-top:0}.review-item{border-top:1px solid var(--line);padding:12px 0}.review-item small{color:var(--muted)}.review-item strong{display:block;margin:4px 0}
+@media(max-width:480px){.wrap{padding:16px 11px 35px}.card{padding:16px}.question{font-size:17px}.stats{gap:6px}.stat{padding:9px 4px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+  <div>
+    <h1>wagih- Elhussiny interactive notebook questions</h1>
+    <div class="sub">Spinal Cord · Cerebellum · Ventricles & CSF · White Matter (70 Questions)</div>
+  </div>
+  <div class="badge" id="badge-count">70 Questions</div>
+</header>
+
+<section class="card" id="setup-view">
+<h2 style="margin-top:0;font-size:22px;">Select Chapters to Practice</h2>
+<p class="sub" style="margin-bottom:20px;">Choose one or more chapters from your selected collection.</p>
+
+<div style="display:flex;gap:15px;margin-bottom:15px;">
+  <button class="btn" type="button" id="select-all">Select all</button>
+  <button class="btn" type="button" id="clear-all">Clear</button>
+</div>
+
+<div id="topics-list"></div>
+
+<div class="actions-bar">
+  <button class="btn primary" id="start-btn" style="width:100%;padding:14px;font-size:16px;">Start Practice Quiz →</button>
+</div>
+</section>
+
+<section class="card hidden" id="quiz-view">
+<section class="stats">
+  <div class="stat"><b id="answered">0</b><span>Answered</span></div>
+  <div class="stat"><b id="correct">0</b><span>Correct</span></div>
+  <div class="stat"><b id="percent">0%</b><span>Accuracy</span></div>
+</section>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="qmeta" id="qmeta">QUESTION 1 / 0</div>
+<p class="question" id="question"></p>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="controls">
+  <button class="btn" id="prev">← Previous</button>
+  <button class="btn primary" id="next">Next →</button>
+</div>
+<div class="tools">
+  <button class="btn" id="finish">Finish exam</button>
+  <button class="btn" id="back-setup">⚙ Change Chapters</button>
+</div>
+</section>
+
+<section class="card result hidden" id="result-view">
+<h2>Quiz Result</h2>
+<p id="summary"></p>
+<div id="review"></div>
+<div class="tools">
+  <button class="btn primary" id="again">Select Other Chapters / Try Again</button>
+</div>
+</section>
+
+</main>
+<script>
+const allChapters = [
+  {
+    id: "spinal_cord",
+    name: "Spinal Cord (20 Questions)",
+    questions: [
+      {q: "The spinal cord typically occupies the upper two-thirds of the vertebral canal and has an average length of:", choices: ["30 cm", "45 cm", "60 cm", "75 cm"], a: 1},
+      {q: "The spinal cord terminates in adults at the level of the intervertebral disc between which vertebrae?", choices: ["C7 and T1", "T12 and L1", "L1 and L2", "S1 and S2"], a: 2},
+      {q: "The lower end of the spinal cord is expanded to form the:", choices: ["Conus terminale", "Conus medullaris", "Filum terminale", "Lumbar enlargement"], a: 1},
+      {q: "The spinal cord consists of how many spinal segments?", choices: ["24", "26", "31", "33"], a: 2},
+      {q: "Which of the following spinal segments are found in the lumbar enlargement?", choices: ["C5-T1", "T1-L1", "L2-S3", "S1-S5"], a: 2},
+      {q: "The cervical enlargement of the spinal cord corresponds to which spinal segments and plexus?", choices: ["C2-C5, cervical plexus", "C5-T1, brachial plexus", "C8-T2, brachial plexus", "T1-L1, intercostal nerves"], a: 1},
+      {q: "The anterior horn of the spinal cord's grey matter is responsible for which function?", choices: ["Sensory", "Motor", "Autonomic", "Proprioception"], a: 1},
+      {q: "The lateral horn of the spinal cord's grey matter is found in which segments?", choices: ["Cervical", "Thoracic and upper two lumbar", "Sacral", "All segments"], a: 1},
+      {q: "The white matter of the spinal cord is divided into columns. Which column is located between the anterior and posterior horns?", choices: ["Posterior column", "Lateral column", "Anterior column", "Central column"], a: 1},
+      {q: "The spinal nerves are formed by the union of two roots. Which root is motor and which is sensory?", choices: ["Anterior (motor), posterior (sensory)", "Anterior (sensory), posterior (motor)", "Both are motor", "Both are sensory"], a: 0},
+      {q: "The cauda equina is a bunch of nerve roots composed of which nerves?", choices: ["All cervical nerves", "All thoracic nerves", "Lumbar (except L1), sacral, and coccygeal nerves", "All sacral nerves"], a: 2},
+      {q: "The spinal cord meninges are composed of three layers. The outer tough layer that continues with the cranial dura mater is the:", choices: ["Pia mater", "Arachnoid mater", "Dura mater", "Denticulate ligament"], a: 2},
+      {q: "The subarachnoid space contains which fluid?", choices: ["Blood", "Serous fluid", "Lymph", "Cerebrospinal fluid (CSF)"], a: 3},
+      {q: "The lumbar cistern is a widened subarachnoid space located below the conus medullaris and contains:", choices: ["Only CSF", "Cauda equina and filum terminale", "Spinal cord and nerve roots", "Epidural fat"], a: 1},
+      {q: "A lumbar puncture is performed to withdraw CSF or inject an anesthetic agent. This procedure is typically done between which vertebrae?", choices: ["L1 and L2", "L2 and L3", "L3 and L4 or L4 and L5", "S1 and S2"], a: 2},
+      {q: "The denticulate ligament is a structure that helps to fix the spinal cord. It is a projection from which meningeal layer?", choices: ["Dura mater", "Arachnoid mater", "Pia mater", "Epidural layer"], a: 2},
+      {q: "The anterior spinal artery, which supplies the anterior two-thirds of the spinal cord, is formed by the union of branches from which arteries?", choices: ["Basilar artery", "Posterior inferior cerebellar arteries", "Vertebral arteries", "Segmental arteries"], a: 2},
+      {q: "The posterior spinal arteries supply the posterior one-third of the cord and originate from:", choices: ["Vertebral artery or posterior inferior cerebellar artery", "Basilar artery", "Anterior spinal artery", "Segmental arteries"], a: 0},
+      {q: "The arteria radicularis magna is a large radicular artery that provides the main blood supply to:", choices: ["The cervical spinal cord", "The thoracic spinal cord", "The upper part of the spinal cord", "The lower part of the spinal cord"], a: 3},
+      {q: "Occlusion of the arteria radicularis magna can lead to ischemia in which region?", choices: ["Cervical", "Thoracic", "Lumbosacral", "All of the above"], a: 2},
+    ]
+  },
+  {
+    id: "cerebellum",
+    name: "Cerebellum (10 Questions)",
+    questions: [
+      {q: "The cerebellum is internally composed of an outer cortex of gray matter and a central medullary core of:", choices: ["White matter", "Neural tissue", "Cerebellar nuclei", "Cerebellar peduncles"], a: 0},
+      {q: "The branching pattern of the white matter extending into the cerebellar folia is known as:", choices: ["Medullary center", "Cerebellar cortex", "Arbor vitae", "Cerebellar peduncles"], a: 2},
+      {q: "The cerebellar nuclei are masses of gray matter embedded in the white matter core. Which one is the most laterally situated?", choices: ["Fastigial nucleus", "Globosus nucleus", "Emboliform nucleus", "Dentate nucleus"], a: 3},
+      {q: "Which of the cerebellar nuclei is the largest and appears as a crenated sac that opens anteromedially?", choices: ["Fastigial nucleus", "Globosus nucleus", "Emboliform nucleus", "Dentate nucleus"], a: 3},
+      {q: "The globosus and emboliform nuclei are situated between the fastigial and dentate nuclei and are collectively called:", choices: ["Nucleus interpositus", "Nucleus globosus", "Nucleus emboliform", "Cerebellar peduncles"], a: 0},
+      {q: "The inferior cerebellar peduncle connects the cerebellum with the:", choices: ["Midbrain", "Pons", "Medulla", "Thalamus"], a: 2},
+      {q: "Which of the following is not an afferent or efferent fiber running through the inferior cerebellar peduncle?", choices: ["Olivocerebellar fibers", "Cerebellolivary fibers", "Pontocerebellar fibers", "All of the above are correct"], a: 2},
+      {q: "The superior cerebellar peduncle contains efferent fibers that connect the cerebellum to the:", choices: ["Red nucleus and thalamus", "Pons", "Medulla", "Inferior olive"], a: 0},
+      {q: "The superior cerebellar peduncle forms the lower lateral boundary of the:", choices: ["Third ventricle", "Fourth ventricle", "Lateral ventricle", "Cerebral aqueduct"], a: 1},
+      {q: "The cerebellum's superior surface is supplied by which artery?", choices: ["Anterior inferior cerebellar artery", "Posterior inferior cerebellar artery", "Superior cerebellar artery", "Basilar artery"], a: 2},
+    ]
+  },
+  {
+    id: "ventricles_csf",
+    name: "Ventricles and CSF Circulation (20 Questions)",
+    questions: [
+      {q: "The third ventricle is the cavity of which part of the brain?", choices: ["Cerebellum", "Brainstem", "Diencephalon", "Cerebral cortex"], a: 2},
+      {q: "The lateral ventricles communicate with the third ventricle through which foramen?", choices: ["Foramen of Magendie", "Foramen of Luschka", "Interventricular foramen of Monro", "Cerebral aqueduct of Sylvius"], a: 2},
+      {q: "The third ventricle is situated in the midline between which two structures?", choices: ["Two cerebral hemispheres", "Two thalami and part of the hypothalamus", "The pons and medulla oblongata", "The cerebellum and brainstem"], a: 1},
+      {q: "The cerebral aqueduct of Sylvius connects which two ventricles?", choices: ["Lateral and third ventricles", "Third and fourth ventricles", "Lateral and fourth ventricles", "All four ventricles"], a: 1},
+      {q: "The anterior wall of the third ventricle is formed by the anterior column of the fornix, the anterior commissure, and the:", choices: ["Optic chiasma", "Pineal gland", "Lamina terminalis", "Mammillary bodies"], a: 2},
+      {q: "The roof of the third ventricle is formed by a sheet of ependyma covered by pia mater, which is invaginated by the:", choices: ["Fornix", "Choroid plexus", "Pineal gland", "Posterior commissure"], a: 1},
+      {q: "Which of the following structures is not part of the floor of the third ventricle?", choices: ["Optic chiasma", "Pineal gland", "Mammillary bodies", "Tegmentum of the midbrain"], a: 1},
+      {q: "The lateral ventricles are C-shaped cavities located in which part of the brain?", choices: ["Brainstem", "Diencephalon", "Cerebral hemispheres", "Cerebellum"], a: 2},
+      {q: "Which part of the lateral ventricle is the largest of its three horns?", choices: ["Anterior horn", "Central part", "Posterior horn", "Inferior horn"], a: 3},
+      {q: "The central part of the lateral ventricle is located primarily within which lobe of the cerebrum?", choices: ["Frontal lobe", "Parietal lobe", "Occipital lobe", "Temporal lobe"], a: 1},
+      {q: "The choroid plexuses of the lateral ventricles are supplied by which artery?", choices: ["Middle cerebral artery", "Anterior cerebral artery", "Anterior choroidal artery", "Posterior cerebral artery"], a: 2},
+      {q: "How much cerebrospinal fluid (CSF) is typically present in an adult?", choices: ["50 ml", "100 ml", "150 ml", "200 ml"], a: 2},
+      {q: "What percentage of CSF is produced by the choroid plexuses in the brain ventricles?", choices: ["30%", "50%", "70%", "100%"], a: 2},
+      {q: "The CSF flows from the lateral ventricles into the third ventricle via the interventricular foramina of Monro. From the third ventricle, where does it go next?", choices: ["Directly to the subarachnoid space", "Into the central canal of the spinal cord", "Into the fourth ventricle via the cerebral aqueduct", "Back into the lateral ventricles"], a: 2},
+      {q: "The greater amount of CSF drains from the fourth ventricle into the subarachnoid space through which foramina?", choices: ["Foramen of Monro and cerebral aqueduct", "Foramina of Magendie and Luschka", "Foramen magnum", "Superior sagittal sinus"], a: 1},
+      {q: "The arachnoid villi, which are responsible for CSF drainage, coalesce to form which structure that projects into the superior sagittal sinus?", choices: ["Pia mater", "Arachnoid granulations", "Dura mater", "Choroid plexus"], a: 1},
+      {q: "Hydrocephalus is an abnormal increase in the volume of CSF within the skull. It is caused by:", choices: ["An increase in CSF production", "A decrease in CSF absorption", "A blockage in CSF circulation", "All of the above"], a: 3},
+      {q: "The fourth ventricle is a tent-like cavity located in front of the cerebellum and behind the pons and upper part of the:", choices: ["Midbrain", "Thalamus", "Medulla oblongata", "Cerebral cortex"], a: 2},
+      {q: "The superior medullary velum forms the upper third of the roof of which ventricle?", choices: ["Lateral ventricle", "Third ventricle", "Fourth ventricle", "All of the above"], a: 2},
+      {q: "The choroid plexus of the fourth ventricle receives its blood supply from a branch of which artery?", choices: ["Vertebral artery", "Basilar artery", "Posterior inferior cerebellar artery", "Superior cerebellar artery"], a: 2},
+    ]
+  },
+  {
+    id: "white_matter",
+    name: "Cerebral White Matter (20 Questions)",
+    questions: [
+      {q: "Association fibers connect different cortical areas within the:", choices: ["Two cerebral hemispheres", "Same cerebral hemisphere", "Cerebrum and spinal cord", "Cerebrum and brainstem"], a: 1},
+      {q: "The short association fibers connect which structures?", choices: ["Different lobes", "Different cortical areas", "Adjacent gyri", "The two cerebral hemispheres"], a: 2},
+      {q: "Commissural fibers connect identical cortical areas of the:", choices: ["Same hemisphere", "Two cerebral hemispheres", "Cerebrum and cerebellum", "Cerebrum and spinal cord"], a: 1},
+      {q: "The corpus callosum is the largest commissure of the brain and connects the two:", choices: ["Brainstem halves", "Thalami", "Cerebral hemispheres", "Cerebellar hemispheres"], a: 2},
+      {q: "In a sagittal section of the cerebrum, the corpus callosum appears as a C-shaped mass of white fibers on the:", choices: ["Superior surface of the hemisphere", "Inferior surface of the hemisphere", "Medial surface of the hemisphere", "Lateral surface of the hemisphere"], a: 2},
+      {q: "The fibers of the genu of the corpus callosum arch forward into the frontal lobes to form which structure?", choices: ["Forceps major", "Forceps minor", "Tapetum", "Splenium"], a: 1},
+      {q: "The fibers of the splenium of the corpus callosum curve backward into the occipital lobes to form which structure?", choices: ["Forceps major", "Forceps minor", "Tapetum", "Genu"], a: 0},
+      {q: "The trunk of the corpus callosum has fibers that extend laterally and downward to form the:", choices: ["Forceps minor", "Forceps major", "Tapetum of the lateral ventricle", "Anterior commissure"], a: 2},
+      {q: "The corpus callosum is supplied by the anterior cerebral artery, with the exception of the splenium, which is supplied by the:", choices: ["Middle cerebral artery", "Posterior cerebral artery", "Internal carotid artery", "Basilar artery"], a: 1},
+      {q: "Projection fibers are ascending and descending fibers that connect the cerebral cortex with:", choices: ["The subcortical centers and spinal cord", "The cerebellum", "The two cerebral hemispheres", "The adjacent gyri"], a: 0},
+      {q: "The internal capsule is a V-shaped bundle of projection fibers located between the thalamus and caudate nucleus medially and the lentiform nucleus:", choices: ["Superiorly", "Inferiorly", "Medially", "Laterally"], a: 3},
+      {q: "The posterior limb of the internal capsule is located between which two structures?", choices: ["The head of the caudate and the anterior part of the lentiform nucleus", "The thalamus and the posterior part of the lentiform nucleus", "The caudate and the thalamus", "The lentiform nucleus and the claustrum"], a: 1},
+      {q: "The anterior limb of the internal capsule is located between which two structures?", choices: ["The head of the caudate nucleus and the anterior part of the lentiform nucleus", "The thalamus and the posterior part of the lentiform nucleus", "The caudate and the thalamus", "The lentiform nucleus and the claustrum"], a: 0},
+      {q: "The genu is the bend between the anterior and posterior limbs of the internal capsule, with its concavity facing:", choices: ["Medially", "Laterally", "Superiorly", "Inferiorly"], a: 1},
+      {q: "The superior thalamic radiation is a fiber content of which part of the internal capsule?", choices: ["Anterior limb", "Genu", "Posterior limb", "Retrolentiform part"], a: 2},
+      {q: "The anterior limb of the internal capsule is supplied by which arteries?", choices: ["Anterior cerebral and middle cerebral arteries", "Middle cerebral and internal carotid arteries", "Anterior choroidal artery", "Posterior cerebral artery"], a: 0},
+      {q: "The retro-lenticular and sub-lenticular limbs of the internal capsule are supplied by which artery?", choices: ["Anterior cerebral artery", "Middle cerebral artery", "Anterior choroidal artery", "Posterior communicating artery"], a: 2},
+      {q: "The corona radiata is a fan-like arrangement of ascending and descending fibers that radiate from the:", choices: ["Basal ganglia", "Thalamus", "Internal capsule", "Corpus callosum"], a: 2},
+      {q: "The anterior commissure is a commissural fiber that connects which two structures?", choices: ["Olfactory bulbs", "Frontal lobes", "Occipital lobes", "Cerebellum and cerebrum"], a: 0},
+      {q: "The anterior cerebral artery runs backward above the corpus callosum, supplying which surface of the brain?", choices: ["Inferior surface", "Superolateral surface", "Medial surface", "All surfaces"], a: 2},
+    ]
+  },
+];
+
+let activeQuestions = [];
+let index = 0, answers = {};
+const $ = id => document.getElementById(id);
+
+function initSetup() {
+  const container = $('topics-list');
+  if (!container) return;
+  container.innerHTML = '';
+  allChapters.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'topic-item';
+    div.innerHTML = `
+      <label style="display:flex;align-items:center;gap:14px;width:100%;cursor:pointer;">
+        <input type="checkbox" value="${t.id}" checked>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:16px;color:var(--text);">${t.name}</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:2px;">${t.questions.length} questions available</div>
+        </div>
+      </label>
+    `;
+    container.appendChild(div);
+  });
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'select-all') {
+    document.querySelectorAll('#topics-list input').forEach(cb => cb.checked = true);
+  }
+  if (e.target && e.target.id === 'clear-all') {
+    document.querySelectorAll('#topics-list input').forEach(cb => cb.checked = false);
+  }
+  if (e.target && e.target.id === 'start-btn') {
+    const selectedIds = Array.from(document.querySelectorAll('#topics-list input:checked')).map(cb => cb.value);
+    if (selectedIds.length === 0) {
+      alert('الرجاء اختيار فصل واحد على الأقل لبدء الاختبار!');
+      return;
+    }
+    
+    activeQuestions = [];
+    selectedIds.forEach(id => {
+      const topic = allChapters.find(t => t.id === id);
+      if (topic) activeQuestions.push(...topic.questions);
+    });
+
+    index = 0;
+    answers = {};
+
+    $('setup-view').classList.add('hidden');
+    $('quiz-view').classList.remove('hidden');
+    $('result-view').classList.add('hidden');
+    $('badge-count').textContent = `${activeQuestions.length} Questions Selected`;
+    renderQuiz();
+  }
+  if (e.target && e.target.id === 'back-setup') {
+    $('quiz-view').classList.add('hidden');
+    $('setup-view').classList.remove('hidden');
+  }
+  if (e.target && e.target.id === 'prev') {
+    if (index > 0) { index--; renderQuiz(); }
+  }
+  if (e.target && e.target.id === 'next') {
+    if (index < activeQuestions.length - 1) { index++; renderQuiz(); } else { finishQuiz(); }
+  }
+  if (e.target && e.target.id === 'finish') {
+    finishQuiz();
+  }
+  if (e.target && e.target.id === 'again') {
+    $('result-view').classList.add('hidden');
+    $('setup-view').classList.remove('hidden');
+  }
+});
+
+function renderQuiz() {
+  const item = activeQuestions[index], chosen = answers[index];
+  $('qmeta').textContent = `QUESTION ${index + 1} / ${activeQuestions.length}`;
+  $('question').textContent = item.q;
+  const optContainer = $('options');
+  optContainer.innerHTML = '';
+  
+  item.choices.forEach((choice, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt'; b.type = 'button';
+    const letter = document.createElement('span'); letter.className = 'letter'; letter.textContent = String.fromCharCode(65 + i);
+    const label = document.createElement('span'); label.textContent = choice;
+    b.append(letter, label);
+    
+    if (chosen !== undefined) {
+      b.disabled = true;
+      if (i === item.a) b.classList.add('correct');
+      if (i === chosen && chosen !== item.a) b.classList.add('wrong');
+    }
+    b.addEventListener('click', () => {
+      if (answers[index] === undefined) {
+        answers[index] = i;
+        renderQuiz();
+      }
+    });
+    optContainer.append(b);
+  });
+
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  if (chosen !== undefined) {
+    fb.textContent = chosen === item.a ? 'Correct answer ✓' : `Incorrect. Correct answer: ${String.fromCharCode(65 + item.a)}. ${item.choices[item.a]}`;
+    fb.className = chosen === item.a ? 'feedback good' : 'feedback bad';
+  }
+  $('prev').disabled = index === 0;
+  $('next').textContent = index === activeQuestions.length - 1 ? 'View results →' : 'Next →';
+  updateStats();
+}
+
+function updateStats() {
+  const n = Object.keys(answers).length;
+  const c = Object.keys(answers).filter(k => answers[k] === activeQuestions[k].a).length;
+  $('answered').textContent = n;
+  $('correct').textContent = c;
+  $('percent').textContent = (n ? Math.round(c / n * 100) : 0) + '%';
+  $('bar').style.width = (n / activeQuestions.length * 100) + '%';
+}
+
+function finishQuiz() {
+  const n = Object.keys(answers).length;
+  const c = Object.keys(answers).filter(k => answers[k] === activeQuestions[k].a).length;
+  $('quiz-view').classList.add('hidden');
+  $('result-view').classList.remove('hidden');
+  $('summary').textContent = `You answered ${n} of ${activeQuestions.length} questions. Score: ${c} / ${activeQuestions.length} (${Math.round(c / activeQuestions.length * 100)}%).`;
+  
+  $('review').innerHTML = '<h3>Review</h3>' + activeQuestions.map((q, i) => {
+    const a = answers[i];
+    return `<div class="review-item"><small>Question ${i + 1} · ${a === undefined ? 'Not answered' : a === q.a ? 'Correct' : 'Incorrect'}</small><strong>${escapeHtml(q.q)}</strong><div>${a === undefined ? 'No answer selected' : `Your answer: ${escapeHtml(q.choices[a])}`}</div><div style="color:var(--green)">Correct: ${escapeHtml(q.choices[q.a])}</div></div>`;
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSetup);
+} else {
+  initSetup();
+}
+</script>
+</body>
+</html>
