@@ -42,7 +42,7 @@ h1{font-size:clamp(20px,4.5vw,27px);letter-spacing:-0.5px;margin:4px 0 5px}.sub{
 .exp-detail .exp-block-title{color:var(--accent);direction:ltr;text-align:left}
 .exp-wrong{background:rgba(248,165,194,0.08);border:1px solid rgba(248,165,194,0.32);color:#fce4ec;direction:rtl;text-align:right}
 .exp-wrong .exp-block-title{color:var(--pink);direction:ltr;text-align:left}
-.bidi-text{unicode-bidi:plaintext}
+.bidi-text{unicode-bidi:plaintext}.exp-detail .bidi-text,.exp-wrong .bidi-text{unicode-bidi:isolate;direction:rtl;text-align:right}
 
 .controls{display:flex;justify-content:space-between;gap:10px;margin-top:20px}.btn{border:1px solid var(--line);border-radius:11px;padding:10px 16px;background:#243440;color:var(--text);font-weight:650;cursor:pointer;font-size:15px}.btn.primary{background:var(--accent);border-color:var(--accent);color:#10202b}.btn:disabled{opacity:.35;cursor:not-allowed}
 .tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.tools .btn{font-size:13px;padding:8px 12px}
@@ -198,6 +198,20 @@ function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+
+function fixBidi(s) {
+  s = String(s || '').replace(/[()]/g, ' ');
+  s = s.replace(/([\u0600-\u06FF])([A-Za-z0-9])/g, '$1 $2').replace(/([A-Za-z0-9])([\u0600-\u06FF])/g, '$1 $2');
+  s = s.replace(/[ \t]{2,}/g, ' ').replace(/ +([،؛.:])/g, '$1');
+  const re = /[A-Za-z][A-Za-z0-9]*(?:[ \-\/,.'+:][A-Za-z0-9]+)*/g;
+  let out = '', last = 0, m;
+  while ((m = re.exec(s))) {
+    out += escapeHtml(s.slice(last, m.index)) + '<bdi dir="ltr">' + escapeHtml(m[0]) + '</bdi>';
+    last = m.index + m[0].length;
+  }
+  return out + escapeHtml(s.slice(last));
+}
+
 function buildExplanationHtml(item) {
   let html = '';
   if (item.exp_answer) {
@@ -215,13 +229,13 @@ function buildExplanationHtml(item) {
   if (item.exp_detail) {
     html += `<div class="exp-block exp-detail">
       <div class="exp-block-title"><span>🧠 Detailed Explanation</span><span>الشرح الدقيق</span></div>
-      <div class="bidi-text">${escapeHtml(item.exp_detail)}</div>
+      <div class="bidi-text">${fixBidi(item.exp_detail)}</div>
     </div>`;
   }
   if (item.exp_wrong) {
     html += `<div class="exp-block exp-wrong">
       <div class="exp-block-title"><span>✕ Why Other Options Are Wrong</span><span>ليه باقي الاختيارات غلط؟</span></div>
-      <div class="bidi-text">${escapeHtml(item.exp_wrong)}</div>
+      <div class="bidi-text">${fixBidi(item.exp_wrong)}</div>
     </div>`;
   }
   return html;
@@ -433,4 +447,4 @@ $('again').addEventListener('click', function() {
 })();
 </script>
 </body>
-</html>
+  </html>
