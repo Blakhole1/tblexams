@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Dr. Samahy CNS Physiology TBL MCQs</title>
+<style>
+:root{color-scheme:dark;--bg:#0d141b;--panel:#17232d;--panel2:#1d2b36;--line:#30414e;--text:#edf3f7;--muted:#9fb0bc;--accent:#75b7ec;--green:#42c99a;--red:#ff7777}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#1b2b39 0,#0d141b 58%);color:var(--text);font:16px/1.5 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:780px;margin:auto;padding:22px 15px 50px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+h1{font-size:clamp(20px,4.5vw,28px);letter-spacing:-0.5px;margin:4px 0 5px}.sub{color:var(--muted);font-size:14px}
+.badge{border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--accent);font-size:13px;white-space:nowrap}
+.card{background:linear-gradient(145deg,#1b2934,#14202a);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 36px #0004;margin-bottom:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:11px;text-align:center}.stat b{display:block;font-size:20px}.stat span{font-size:12px;color:var(--muted)}
+.progress{height:7px;background:#26343f;border-radius:9px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}
+.qmeta{color:var(--accent);font-size:13px;font-weight:700;margin-bottom:10px}.question{font-size:19px;line-height:1.4;font-weight:650;margin:0 0 18px}
+.options{display:grid;gap:10px}.opt{width:100%;text-align:left;border:1px solid var(--line);background:#202f3a;color:var(--text);border-radius:12px;padding:13px 14px;display:flex;gap:12px;align-items:flex-start;transition:.15s;cursor:pointer;font-size:15px}
+.opt:hover:not(:disabled){border-color:var(--accent);background:#263a49}.letter{flex:0 0 26px;height:26px;border-radius:8px;background:#314453;display:grid;place-items:center;font-weight:700;color:#d6e7f4;font-size:13px}.opt.correct{border-color:var(--green);background:#15372f}.opt.wrong{border-color:var(--red);background:#3b2428}.opt:disabled{cursor:default;opacity:1}
+.feedback{min-height:28px;margin:14px 0 0;font-weight:650}
+.feedback.good{color:var(--green)}
+.feedback.bad{color:var(--red)}
+.controls{display:flex;justify-content:space-between;gap:10px;margin-top:18px}.btn{border:1px solid var(--line);border-radius:11px;padding:10px 16px;background:#243440;color:var(--text);font-weight:650;cursor:pointer;font-size:15px}.btn.primary{background:var(--accent);border-color:var(--accent);color:#10202b}.btn:disabled{opacity:.35;cursor:not-allowed}
+.tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.tools .btn{font-size:13px;padding:8px 12px}
+.topic-item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;transition:.15s}
+.topic-item label{display:flex;flex-direction:column;flex:1;cursor:pointer}
+.t-title{font-weight:700;font-size:16px;color:var(--text)}
+.t-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.topic-item input{width:20px;height:20px;accent-color:var(--accent);cursor:pointer;flex:0 0 auto}
+.actions-bar{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.hidden{display:none!important}
+.result h2{margin-top:0}.review-item{border-top:1px solid var(--line);padding:12px 0}.review-item small{color:var(--muted)}.review-item strong{display:block;margin:4px 0}
+@media(max-width:480px){.wrap{padding:16px 11px 35px}.card{padding:16px}.question{font-size:17px}.stats{gap:6px}.stat{padding:9px 4px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+  <div>
+    <h1>Dr. Samahy CNS Physiology TBL</h1>
+    <div class="sub">Interactive Topic Selector · 87 Questions</div>
+  </div>
+  <div class="badge" id="badge-count">87 Questions</div>
+</header>
+
+<section class="card" id="setup-view">
+<h2 style="margin-top:0;font-size:22px;">Select Topics to Practice</h2>
+<p class="sub" style="margin-bottom:20px;">Choose one or more sections from Dr. Abdullah El-Samahy's CNS Physiology TBL MCQs.</p>
+
+<div style="display:flex;gap:15px;margin-bottom:15px;">
+  <button class="btn" type="button" id="select-all">Select all</button>
+  <button class="btn" type="button" id="clear-all">Clear</button>
+</div>
+
+<div id="topics-list">
+<div class="topic-item" data-topic-id="set1_previous_exams">
+  <input type="checkbox" id="cb-set1_previous_exams" value="set1_previous_exams" checked>
+  <label for="cb-set1_previous_exams">
+    <span class="t-title">SET 1 - Previous Exams MCQs (27 Questions)</span>
+    <span class="t-sub">27 questions available</span>
+  </label>
+</div>
+<div class="topic-item" data-topic-id="set2_spinal_cord_lesion">
+  <input type="checkbox" id="cb-set2_spinal_cord_lesion" value="set2_spinal_cord_lesion" checked>
+  <label for="cb-set2_spinal_cord_lesion">
+    <span class="t-title">SET 2 - Spinal Cord Lesion (30 Questions)</span>
+    <span class="t-sub">30 questions available</span>
+  </label>
+</div>
+<div class="topic-item" data-topic-id="set2_sensory_disturbances">
+  <input type="checkbox" id="cb-set2_sensory_disturbances" value="set2_sensory_disturbances" checked>
+  <label for="cb-set2_sensory_disturbances">
+    <span class="t-title">SET 2 - Sensory Disturbances (30 Questions)</span>
+    <span class="t-sub">30 questions available</span>
+  </label>
+</div>
+</div>
+
+<div class="actions-bar">
+  <button class="btn primary" type="button" id="start-btn" style="width:100%;padding:14px;font-size:16px;">Start Practice Quiz →</button>
+</div>
+</section>
+
+<section class="card hidden" id="quiz-view">
+<section class="stats">
+  <div class="stat"><b id="answered">0</b><span>Answered</span></div>
+  <div class="stat"><b id="correct">0</b><span>Correct</span></div>
+  <div class="stat"><b id="percent">0%</b><span>Accuracy</span></div>
+</section>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="qmeta" id="qmeta">QUESTION 1 / 0</div>
+<p class="question" id="question"></p>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="controls">
+  <button class="btn" type="button" id="prev">← Previous</button>
+  <button class="btn primary" type="button" id="next">Next →</button>
+</div>
+<div class="tools">
+  <button class="btn" type="button" id="finish">Finish exam</button>
+  <button class="btn" type="button" id="back-setup">⚙ Change Topics</button>
+</div>
+</section>
+
+<section class="card result hidden" id="result-view">
+<h2>Quiz Result</h2>
+<p id="summary"></p>
+<div id="review"></div>
+<div class="tools">
+  <button class="btn primary" type="button" id="again">Select Other Topics / Try Again</button>
+</div>
+</section>
+
+</main>
+<script>
+(function() {
+const allChapters = [
+  {id: "set1_previous_exams", name: "SET 1 - Previous Exams MCQs (27 Questions)", questions: [
+      {q: "Q1. During Brown-Séquard syndrome, the patient suffers from both sensory and motor disturbances. What are these manifestations at the level of the lesion?", choices: ["Loss of all sensations and ipsilateral LMNL", "Cutaneous hyperalgesia and ipsilateral LMNL", "Ipsilateral loss of fine touch and UMNL", "Contralateral loss of pain and LMNL"], a: 0},
+      {q: "Q2. Syringomyelia is characterized by all of the following EXCEPT:", choices: ["It is a cavity formation around the central canal of the spinal cord", "It affects mainly the lumbar segments", "It causes jacket sensory loss", "Its sensory loss is dissociated"], a: 1},
+      {q: "Q3. A subject suffering from left hemisection of the spinal cord shows:", choices: ["Loss of pain and temperature on the left side below the level of the lesion", "Loss of all sensations on the opposite side at the level of the section", "Loss of fine touch and vibration sense on the right side below the level of the lesion", "Loss of fine touch and proprioceptive sensation on the left side below the level of the lesion"], a: 3},
+      {q: "Q4. In posterior quadrant lesion of the spinal cord, what could be the cause of spasticity?", choices: ["Sparing facilitatory fibers passing in the dorsal column", "Sparing facilitatory fibers passing in the lateral column", "Hypersensitivity of alpha motor neurons due to released chemical transmitters", "Most supraspinal facilitatory fibers pass in the anterior column"], a: 3},
+      {q: "Q5. Denervation hypersensitivity explains which reflex that occurs with complete transection of the spinal cord?", choices: ["Mass reflex", "Plantar reflex", "Flexion withdrawal reflex", "Defecation reflex"], a: 0},
+      {q: "Q6. Which one of the following changes occurs above the level of the lesion in Brown-Séquard syndrome?", choices: ["Loss of crude touch on the opposite side of the lesion", "Cutaneous hyperalgesia on the same side of the lesion", "Loss of fine touch on the same side of the lesion", "Loss of temperature sensation on the opposite side of the lesion"], a: 1},
+      {q: "Q7. Which of the following is a feature of complete transection of the spinal cord?", choices: ["Transection at the first cervical segment increases respiration", "Transection below the fifth cervical segment causes death", "Transection at the first thoracic segment causes monoplegia", "Transection at the sixth thoracic segment causes paraplegia"], a: 3},
+      {q: "Q8. Anterior quadrant lesion in the spinal cord shows loss of pain and temperature sensations in which of the following sites of the body?", choices: ["Ipsilaterally above the level of the lesion", "Ipsilaterally below the level of the lesion", "Contralaterally above the level of the lesion", "Contralaterally below the level of the lesion"], a: 3},
+      {q: "Q9. A male patient had a car accident that ended with complete transection of the spinal cord at the level of C5. What is/are the consequence/s of this lesion?", choices: ["Paralysis of respiratory muscles and death", "Diaphragmatic respiration and quadriplegia", "Normal respiration and paraplegia", "Diaphragmatic respiration and hemiplegia"], a: 1},
+      {q: "Q10. A 55-year-old patient had a fracture of a vertebra after falling on stairs 6 months ago. On routine neurological examination, his neurologist noticed the appearance of the spinal stepping reaction. What is this reaction?", choices: ["Painful stimulus leads to contraction of the flexors and inhibition of the extensors.", "Warming the skin leads to vasodilatation and sweating, so the skin becomes healthier.", "Scratching the skin of the lower limb leads to evacuation of the urinary bladder.", "Passive flexion of one limb leads to extension of the opposite limb."], a: 3},
+      {q: "Q11. In a case of anterior quadrant lesion of the spinal cord, which of the following motor manifestations can be noticed in this patient?", choices: ["At the level of the lesion: LMNL due to damage of the anterior horn cells on the same side.", "At the level of the lesion: contralateral UMNL due to damage of the lateral corticospinal tract.", "Below the level of the lesion: hypertonia due to damage of the inhibitory extrapyramidal tract.", "Below the level of the lesion: hypertonia due to facilitation of the gamma motor neurons."], a: 0},
+      {q: "Q12. Regarding tabes dorsalis, all statements are correct EXCEPT for one:", choices: ["It is accompanied by a negative Romberg's sign due to loss of vision.", "It is accompanied by incoordination of voluntary movements.", "It is due to syphilitic infection.", "It is accompanied by a distended, thin-walled, and hypotonic bladder."], a: 0},
+      {q: "Q13. A 45-year-old male patient arrived at the emergency department with hypotension and loss of consciousness following a motor vehicle accident. CT scan revealed cervical spine injuries and a complete transection of the spinal cord (Above brachial plexus). What are the possible consequences of this lesion?", choices: ["Paralysis of respiratory muscles and death", "Diaphragmatic respiration and quadriplegia", "Normal respiration and paraplegia", "Diaphragmatic respiration and hemiplegia"], a: 1},
+      {q: "Q14. Regarding the shock stage of complete transection of the spinal cord, which of the following characterizes this stage?", choices: ["Loss of all motor functions, sensations, and reflexes above the level of the lesion", "Loss of all motor functions and sensations with intact reflexes above the level of the lesion", "Loss of all motor functions, sensations, and reflexes below the level of the lesion", "Loss of all motor functions and sensations with intact reflexes below the level of the lesion"], a: 2},
+      {q: "Q15. Regarding micturition during complete transection of the spinal cord, which of the following describes the condition?", choices: ["Automatic bladder during the shock stage", "Automatic bladder during the early recovery stage", "Automatic bladder during the late recovery stage", "Retention with overflow during the late recovery stage"], a: 1},
+      {q: "Q16. Mass reflex can occur in which of the following conditions?", choices: ["Shock stage of complete transection of the spinal cord", "Recovery stage of complete transection of the spinal cord", "Posterior quadrant lesion of the spinal cord", "Anterior quadrant lesion of the spinal cord"], a: 1},
+      {q: "Q17. Regarding the shock stage of complete transection of the spinal cord, which of the following can be present?", choices: ["Loss of all motor functions, sensations, and intact reflexes below the level of the lesion", "Flaccid paralysis and exaggerated reflexes below the level of the lesion", "Loss of all sensations and reflexes above the level of the lesion", "Loss of vasoconstrictor tone below the level of the lesion"], a: 3},
+      {q: "Q18. A patient with complete spinal cord transection develops bilateral lower limb flexion, abdominal muscle contraction, profuse sweating, and evacuation of the bladder after scratching the skin below the lesion. What is this reaction?", choices: ["Crossed extensor reflex.", "Mass reflex.", "Stretch reflex.", "Supporting reaction."], a: 1},
+      {q: "Q19. Which of the following is considered the only useful effect of the mass reflex?", choices: ["Profuse sweating.", "Fluctuations in blood pressure.", "Evacuation of the bladder and rectum.", "Contraction of the anterior abdominal wall."], a: 2},
+      {q: "Q20. In posterior quadrant lesion of the spinal cord, what could be the cause of spasticity?", choices: ["Sparing facilitatory fibers passing in the dorsal column", "Sparing facilitatory fibers passing in the lateral column", "Hypersensitivity of alpha motor neurons due to released chemical transmitters", "Most supraspinal facilitatory fibers passing in the anterior column"], a: 3},
+      {q: "Q21. During hemisection of the spinal cord, why is there no affection of the micturition reflex?", choices: ["Autonomic fibers are not affected by the lesion", "The bladder receives supraspinal facilitatory fibers", "Bilateral innervation of the urethral sphincter", "Denervation hypersensitivity of the bladder"], a: 2},
+      {q: "Q22. Which of the following is a feature of the shock stage of complete transection of the spinal cord?", choices: ["Its duration in humans is 2–6 months", "Affected spinal centers become depolarized", "Decreased arterial blood pressure", "Intact micturition reflex"], a: 2},
+      {q: "Q23. A 19-year-old gang member presented with a stab wound to the neck. Neurological assessment revealed left hemiplegia with complete loss of sensation at C6, and loss of pain and temperature on the right side below C6. An MRI of the cervical spinal cord will reveal which of these findings?", choices: ["Hemisection of the left spinal cord", "Lesion of the left dorsal column only", "Complete transection of the spinal cord", "Lesion of the left anterolateral white matter only"], a: 0},
+      {q: "Q24. In this case (left hemisection at C6), which of the following could be the site of spinal cord lesion?", choices: ["Anterior horns and anterior roots of both sides.", "Posterior horns and posterior roots of both sides.", "Anterior and posterior horns of one side.", "Anterior and lateral horns in both sides."], a: 2},
+      {q: "Q25. Why is there no affection of the micturition reflex in this patient?", choices: ["Autonomic fibers not affected by the lesion.", "Receive supraspinal facilitatory fibers.", "Bilateral innervation to the urethral sphincter.", "Denervation hypersensitivity of the bladder neck."], a: 2},
+      {q: "Q26. On eye examination (in cervical left hemisection), what is expected?", choices: ["Horner syndrome on the same side.", "Horner syndrome on the opposite side.", "Horner syndrome on both sides.", "Both eyes not affected."], a: 0},
+      {q: "Q27. The motor disturbance in this case (left hemisection at C6) is:", choices: ["Ipsilateral LMNL below C6 and contralateral UMNL at C6.", "Contralateral LMNL at C6 and contralateral LMNL below C6.", "Ipsilateral LMNL below C6 and ipsilateral LMNL at C6.", "Ipsilateral LMNL at C6 and ipsilateral UMNL below C6."], a: 3}
+    ]},
+  {id: "set2_spinal_cord_lesion", name: "SET 2 - Spinal Cord Lesion (30 Questions)", questions: [
+      {q: "Q1. A patient sustained a complete spinal cord transection following a road traffic accident. The lesion is located above the origin of the phrenic nerve. What is the expected outcome?", choices: ["Quadriplegia with preserved diaphragmatic respiration.", "Paraplegia with normal respiration.", "Fatal respiratory paralysis.", "Hemiplegia with respiratory distress."], a: 2},
+      {q: "Q2. A patient sustained a complete spinal cord transection at the cervical region above the brachial plexus. Which of the following manifestations is expected?", choices: ["Paraplegia with preserved upper limb movements.", "Quadriplegia with preserved diaphragmatic respiration.", "Hemiplegia with diaphragmatic paralysis.", "Paraplegia with respiratory paralysis."], a: 1},
+      {q: "Q3. A patient developed complete spinal cord transection at the mid-thoracic level, above the lumbosacral plexus. What is the expected motor disturbance?", choices: ["Quadriplegia.", "Hemiplegia.", "Paraplegia.", "Monoplegia."], a: 2},
+      {q: "Q4. A patient with complete spinal cord transection presents with flaccid paralysis, loss of tendon jerks, and loss of visceral reflexes below the level of the lesion. What is the most likely stage?", choices: ["Recovery of spinal reflex activity.", "Spinal shock.", "Failure of spinal reflex activity.", "Mass reflex stage."], a: 1},
+      {q: "Q5. What is the usual duration of spinal shock following complete spinal cord transection in humans?", choices: ["A few hours.", "1-2 days.", "2-5 weeks.", "6 months."], a: 2},
+      {q: "Q6. A patient with complete spinal cord transection develops urinary retention with overflow incontinence during the initial period following injury. This is mainly due to:", choices: ["Increased activity of the micturition reflex.", "Temporary loss of visceral reflexes.", "Increased supraspinal facilitatory impulses.", "Hyperactivity of the detrusor muscle."], a: 1},
+      {q: "Q7. A patient with cervical spinal cord transection develops bilateral miosis. What is the most likely explanation?", choices: ["Injury to pupilloconstrictor fibers.", "Injury to pupillodilator fibers.", "Increased sympathetic activity.", "Injury to the optic nerve."], a: 1},
+      {q: "Q8. During spinal shock, a patient develops cold, cyanotic limbs and hypotension. What is the underlying mechanism?", choices: ["Increased vasoconstrictor tone.", "Loss of vasoconstrictor tone leading to vasodilatation and sluggish circulation.", "Increased cardiac sympathetic activity.", "Excessive activation of baroreceptors."], a: 1},
+      {q: "Q9. A patient with complete spinal cord transection develops bed sores over the gluteal region and back. Which of the following contributes most directly to their development?", choices: ["Increased withdrawal reflexes and excessive circulation.", "Sluggish circulation, ischemia, and loss of withdrawal reflex.", "Increased muscle tone and hyperreflexia.", "Increased sympathetic vasoconstriction."], a: 1},
+      {q: "Q10. What is the main physiological mechanism responsible for spinal shock following complete spinal cord transection?", choices: ["Sudden withdrawal of supraspinal facilitatory impulses causing hyperpolarization of spinal neurons.", "Sudden increase in supraspinal inhibitory impulses causing depolarization.", "Direct destruction of all spinal motor neurons.", "Severe hypotension causing complete failure of spinal centers."], a: 0},
+      {q: "Q11. Which of the following statements regarding the cause of spinal shock is correct?", choices: ["It occurs only after traumatic spinal cord injury.", "It is mainly caused by severe hypotension.", "It can occur even after a clean surgical transection of the spinal cord.", "It is caused by permanent destruction of spinal reflex centers."], a: 2},
+      {q: "Q12. A patient with complete spinal cord transection begins to recover spinal reflex activity. Which of the following reflexes usually returns first?", choices: ["Knee jerk.", "Ankle jerk.", "Withdrawal reflex.", "Micturition reflex."], a: 2},
+      {q: "Q13. During the recovery stage following spinal shock, which of the following is expected to appear early?", choices: ["Loss of Babinski sign.", "Appearance of Babinski sign.", "Permanent disappearance of all tendon jerks.", "Complete recovery of voluntary movements."], a: 1},
+      {q: "Q14. A patient with complete spinal cord transection develops increased muscle tone several weeks after the injury. Initially, the increased tone is more prominent in the flexors. What is the expected posture?", choices: ["Paraplegia in extension.", "Paraplegia in flexion.", "Flaccid paraplegia.", "Hemiplegia."], a: 1},
+      {q: "Q15. Months after complete spinal cord transection, extensor tone becomes predominant. Which of the following is expected?", choices: ["Paraplegia in flexion.", "Paraplegia in extension.", "Flaccid paralysis.", "Recovery of voluntary movements."], a: 1},
+      {q: "Q16. During recovery of spinal reflex activity after complete spinal cord transection, which tendon reflex usually returns before the other?", choices: ["Ankle jerk before knee jerk.", "Knee jerk before ankle jerk.", "Both return simultaneously.", "Neither reflex returns."], a: 1},
+      {q: "Q17. A patient with complete spinal cord transection develops an automatic bladder and automatic rectum several weeks after the injury. This indicates:", choices: ["Permanent recovery of supraspinal control.", "Recovery of spinal visceral reflexes.", "Complete recovery of voluntary movements.", "Failure of spinal reflex activity."], a: 1},
+      {q: "Q18. A patient with complete spinal cord transection develops bilateral lower limb flexion, abdominal muscle contraction, profuse sweating, and evacuation of the bladder after scratching the skin below the lesion. What is this reaction?", choices: ["Crossed extensor reflex.", "Mass reflex.", "Stretch reflex.", "Supporting reaction."], a: 1},
+      {q: "Q19. Which of the following is considered the only useful effect of the mass reflex?", choices: ["Profuse sweating.", "Fluctuations in blood pressure.", "Evacuation of the bladder and rectum.", "Contraction of the anterior abdominal wall."], a: 2},
+      {q: "Q20. A patient with spinal cord transection develops swelling and stiffening of the penis, elevation of the testes, and thigh adduction following stimulation of the glans penis. What is this reflex?", choices: ["Mass reflex.", "Coitus reflex.", "Withdrawal reflex.", "Supporting reaction."], a: 1},
+      {q: "Q21. A patient reaches maximal recovery approximately 6 months after complete spinal cord transection. Which of the following findings is expected?", choices: ["Disappearance of all spinal reflexes.", "Strong supporting reaction allowing the patient to stand without support.", "Permanent flaccid paralysis with absent tendon jerks.", "Complete recovery of voluntary motor and sensory functions."], a: 1},
+      {q: "Q22. A patient with complete spinal cord transection develops urinary tract infection and infected bed sores, followed by generalized toxemia and renal failure. What is the most likely stage?", choices: ["Spinal shock.", "Recovery of spinal reflex activity.", "Failure of spinal reflex activity.", "Initial traumatic stage."], a: 2},
+      {q: "Q23. A patient presents with hemisection of the right half of the spinal cord. Which sensory disturbance is expected below the level of the lesion?", choices: ["Loss of pain and temperature on the right side.", "Loss of fine touch and proprioception on the right side.", "Loss of all sensations on the left side.", "Loss of fine touch and proprioception on the left side."], a: 1},
+      {q: "Q24. A patient with Brown-Séquard syndrome develops loss of pain and temperature sensation below the level of the spinal cord lesion. This loss occurs mainly on:", choices: ["The same side of the lesion.", "The opposite side of the lesion.", "Both sides equally.", "Neither side."], a: 1},
+      {q: "Q25. In a patient with Brown-Séquard syndrome, which motor manifestation is expected below the level of the lesion?", choices: ["Ipsilateral LMNL paralysis.", "Contralateral LMNL paralysis.", "Ipsilateral UMNL paralysis.", "Contralateral UMNL paralysis."], a: 2},
+      {q: "Q26. A patient with cervical Brown-Séquard syndrome develops Horner syndrome and vasomotor paralysis below the lesion. These manifestations occur on:", choices: ["The same side of the lesion.", "The opposite side of the lesion.", "Both sides equally.", "Neither side."], a: 0},
+      {q: "Q27. A patient has an anterior quadrant lesion of the spinal cord. Which of the following sensory manifestations is expected below the level of the lesion?", choices: ["Loss of proprioception on the same side.", "Loss of pain and temperature on the opposite side.", "Loss of all sensations on the same side.", "Loss of fine touch on the opposite side only."], a: 1},
+      {q: "Q28. A patient has a posterior quadrant lesion of the spinal cord. Which of the following findings is expected below the level of the lesion?", choices: ["Loss of pain and temperature on the opposite side.", "Loss of proprioception on the same side.", "LMNL paralysis on the opposite side.", "Loss of crude touch on both sides."], a: 1},
+      {q: "Q29. A patient develops a spinal nerve lesion. Which of the following findings is expected at the level of the lesion?", choices: ["Ipsilateral UMNL paralysis with preserved sensation.", "Contralateral LMNL paralysis with loss of pain and temperature.", "Ipsilateral LMNL paralysis, loss of all sensations, and loss of related reflexes.", "Contralateral UMNL paralysis with autonomic hyperactivity."], a: 2},
+      {q: "Q30. A patient with a posterior quadrant lesion develops spastic paralysis below the level of the lesion. What is the most likely explanation?", choices: ["Damage to the anterior horn cells.", "Damage to the dorsal horn cells.", "Damage to the corticospinal tract with loss of descending motor control.", "Damage to the anterior roots."], a: 2}
+    ]},
+  {id: "set2_sensory_disturbances", name: "SET 2 - Sensory Disturbances (30 Questions)", questions: [
+      {q: "Q31. A patient presents with severe shooting pains in both lower limbs, followed several months later by loss of pain and other sensations. Which of the following is the most likely diagnosis?", choices: ["Syringomyelia", "Tabes dorsalis", "Thalamic syndrome", "Peripheral neuritis"], a: 1},
+      {q: "Q32. A patient with tabes dorsalis develops sensory ataxia. Which of the following best explains this condition?", choices: ["Loss of muscle power due to anterior horn cell damage.", "Incoordination of voluntary movements due to loss of proprioceptive sensation.", "Increased muscle tone due to corticospinal tract damage.", "Loss of pain sensation due to spinothalamic tract damage."], a: 1},
+      {q: "Q33. A patient with tabes dorsalis can maintain equilibrium while his eyes are open but immediately falls when he closes them. What is this clinical sign?", choices: ["Babinski sign", "Romberg sign", "Kernig sign", "Brudzinski sign"], a: 1},
+      {q: "Q34. A patient with tabes dorsalis develops a characteristic gait in which he raises his legs excessively and strikes the ground forcefully while walking. What is the explanation?", choices: ["Increased activity of the stretch reflex.", "Loss of proprioceptive sensation from the lower limbs.", "Spasticity due to corticospinal tract damage.", "Weakness of the ankle dorsiflexors."], a: 1},
+      {q: "Q35. A patient with tabes dorsalis develops a distended, thin-walled, hypotonic urinary bladder with retention and overflow dribbling. This is due to:", choices: ["Increased micturition reflex activity.", "Loss of the visceral micturition reflex.", "Increased sympathetic stimulation of the bladder.", "Hyperactivity of the external urethral sphincter."], a: 1},
+      {q: "Q36. A patient with tabes dorsalis develops small pupils that do not react to light but retain their accommodation response. What is the most likely associated finding?", choices: ["Horner syndrome", "Argyll-Robertson pupil", "Marcus Gunn pupil", "Fixed dilated pupil"], a: 1},
+      {q: "Q37. A young patient presents with bilateral loss of pain and temperature sensation over the shoulders and upper limbs, while fine touch and proprioception remain intact. What is the most likely diagnosis?", choices: ["Tabes dorsalis", "Syringomyelia", "Brown-Séquard syndrome", "Thalamic syndrome"], a: 1},
+      {q: "Q38. In a patient with syringomyelia, which structures are primarily affected to produce the characteristic sensory loss?", choices: ["Dorsal columns bilaterally.", "Crossing fibers of the spinothalamic tracts.", "Anterior horn cells bilaterally.", "Posterior roots bilaterally."], a: 1},
+      {q: "Q39. A patient with syringomyelia has loss of pain, temperature, and rough touch in a jacket-shaped distribution. Which of the following sensations is expected to remain intact?", choices: ["Pain and temperature.", "Rough touch only.", "Fine touch and proprioception.", "All superficial sensations."], a: 2},
+      {q: "Q40. A patient develops hemisection of the right half of the spinal cord. Which sensory disturbance is expected at the level of the lesion?", choices: ["Loss of all sensations on the right side.", "Loss of all sensations on the left side.", "Loss of pain and temperature on both sides.", "Loss of proprioception on the left side only."], a: 0},
+      {q: "Q41. A patient with Brown-Séquard syndrome develops secondary hyperalgesia above the level of the lesion. This occurs on:", choices: ["The same side of the lesion.", "The opposite side of the lesion.", "Both sides equally.", "Neither side."], a: 0},
+      {q: "Q42. A patient with right-sided spinal cord hemisection develops loss of fine touch and proprioception below the level of the lesion. This sensory loss occurs on:", choices: ["The right side.", "The left side.", "Both sides.", "Neither side."], a: 0},
+      {q: "Q43. In Brown-Séquard syndrome, loss of pain, temperature, and rough touch below the level of the lesion occurs on:", choices: ["The same side of the lesion.", "The opposite side of the lesion.", "Both sides equally.", "The same side at the level only."], a: 1},
+      {q: "Q44. A patient develops sudden contralateral hemianesthesia following occlusion of the thalamogeniculate artery. Which of the following is the most likely diagnosis?", choices: ["Syringomyelia", "Thalamic syndrome", "Tabes dorsalis", "Peripheral neuritis"], a: 1},
+      {q: "Q45. A patient with thalamic syndrome develops severe, poorly localized pain in response to normally painful or temperature stimuli several weeks after the initial lesion. What is this manifestation called?", choices: ["Sensory ataxia", "Thalamic hyperpathia", "Secondary hyperalgesia", "Dissociated sensory loss"], a: 1},
+      {q: "Q46. A patient with thalamic syndrome develops severe sensory ataxia. Which sensory modality is mainly responsible for this manifestation?", choices: ["Pain sensation.", "Temperature sensation.", "Proprioceptive sensation.", "Crude touch sensation."], a: 2},
+      {q: "Q47. A patient develops contralateral hemianesthesia following rupture of the lenticulostriate artery. Which structure is most likely affected?", choices: ["Dorsal column.", "Internal capsule.", "Posterior horn.", "Anterior horn."], a: 1},
+      {q: "Q48. A diabetic patient presents with numbness and decreased sensation in both hands and feet, producing a glove-and-stocking distribution. What is the most likely diagnosis?", choices: ["Thalamic syndrome", "Peripheral neuritis", "Syringomyelia", "Brown-Séquard syndrome"], a: 1},
+      {q: "Q49. A patient with chronic alcohol use develops peripheral neuritis. Which of the following is an expected associated motor manifestation?", choices: ["Spastic paralysis of proximal muscles.", "Paresis or paralysis of distal parts.", "Contralateral hemiplegia.", "Quadriplegia with preserved sensation."], a: 1},
+      {q: "Q50. A patient complains of frontal headache originating from intracranial structures located above the tentorium cerebelli. Which of the following is the expected site of referred pain?", choices: ["Occipital region.", "Frontal region.", "Cervical region.", "Temporal region only."], a: 1},
+      {q: "Q51. A patient develops severe headache following spinal anesthesia due to removal of approximately 20 mL of CSF. What is the underlying mechanism?", choices: ["Increased intracranial pressure due to excess CSF.", "Reduced brain floating causing traction on cranial nerve roots.", "Cerebral vasoconstriction due to hypertension.", "Inflammation of the meninges."], a: 1},
+      {q: "Q52. A patient presents with persistent, dull, aching, poorly localized headache that is not relieved by ordinary analgesics and is associated with vomiting and decreased heart rate. What is the most likely cause?", choices: ["Low CSF pressure.", "High CSF pressure.", "Hypertensive headache.", "Constipation headache."], a: 1},
+      {q: "Q53. A hypertensive patient complains of a pulsatile, throbbing headache whose severity is related to pulse pressure. What is the underlying mechanism?", choices: ["Traction on cranial nerve roots.", "Stretching of cerebral blood vessels.", "Increased CSF production.", "Spasm of neck muscles."], a: 1},
+      {q: "Q54. A patient develops headache following alcohol consumption or exposure to excessive heat. Which of the following mechanisms is most likely responsible?", choices: ["Cerebral vasoconstriction.", "Cerebral vasodilatation.", "Increased CSF absorption.", "Spasm of the cerebral arteries."], a: 1},
+      {q: "Q55. A patient presents with severe headache, high fever, and neck muscle spasm. What is the most likely diagnosis?", choices: ["Migraine.", "Meningitis.", "Hypertensive headache.", "Low CSF pressure headache."], a: 1},
+      {q: "Q56. A young female patient develops visual hallucinations approximately 30 minutes before the onset of a severe unilateral headache. What is the most likely explanation for this preceding phase?", choices: ["Marked cerebral vasodilatation.", "Reflex cerebral vasoconstriction causing ischemia.", "Increased intracranial pressure.", "Meningeal inflammation."], a: 1},
+      {q: "Q57. A patient with migraine experiences a preceding aura followed by a severe headache that may persist for up to 48 hours. The headache phase is mainly associated with:", choices: ["Persistent cerebral vasoconstriction.", "Loss of vascular tone with marked vasodilatation.", "Decreased cerebral blood flow due to hypotension.", "Increased CSF absorption."], a: 1},
+      {q: "Q58. A female patient experiences recurrent unilateral headaches associated with nausea, sweating, visual field disturbances, and facial twitching. Which of the following is the most likely diagnosis?", choices: ["Meningitis.", "Migraine.", "Hypertensive headache.", "Thalamic syndrome."], a: 1},
+      {q: "Q59. A patient presents with recurrent headache associated with blurred vision. Ophthalmological examination reveals increased intraocular pressure. Which of the following is the most likely cause?", choices: ["Nasal sinusitis.", "Glaucoma.", "Middle ear disease.", "Errors of refraction."], a: 1},
+      {q: "Q60. A patient presents with recurrent headache after developing nasal congestion and facial pain. Which of the following is the most likely extra-cranial cause?", choices: ["Intracranial venous sinus thrombosis.", "Nasal sinusitis.", "High CSF pressure.", "Thalamic vascular occlusion."], a: 1}
+    ]}
+];
+
+let activeQuestions = [];
+let index = 0, answers = {};
+const $ = id => document.getElementById(id);
+
+function getSelectedIds() {
+  const boxes = document.querySelectorAll('#topics-list input[type="checkbox"]');
+  const ids = [];
+  boxes.forEach(cb => { if (cb.checked) ids.push(cb.value); });
+  return ids;
+}
+
+function startSelectedQuiz(allowAllFallback) {
+  let selectedIds = getSelectedIds();
+  if (selectedIds.length === 0) {
+    if (allowAllFallback) {
+      document.querySelectorAll('#topics-list input[type="checkbox"]').forEach(cb => cb.checked = true);
+      selectedIds = getSelectedIds();
+    } else {
+      alert('الرجاء اختيار موضوع واحد على الأقل لبدء الاختبار!');
+      return;
+    }
+  }
+
+  activeQuestions = [];
+  selectedIds.forEach(id => {
+    const topic = allChapters.find(t => t.id === id);
+    if (topic && Array.isArray(topic.questions)) {
+      activeQuestions.push(...topic.questions);
+    }
+  });
+
+  if (activeQuestions.length === 0) {
+    allChapters.forEach(t => activeQuestions.push(...t.questions));
+  }
+
+  index = 0;
+  answers = {};
+
+  $('setup-view').classList.add('hidden');
+  $('result-view').classList.add('hidden');
+  $('quiz-view').classList.remove('hidden');
+  $('badge-count').textContent = `${activeQuestions.length} Questions Selected`;
+  window.scrollTo(0, 0);
+  renderQuiz();
+}
+
+function renderQuiz() {
+  if (!activeQuestions.length) return;
+  const item = activeQuestions[index], chosen = answers[index];
+  $('qmeta').textContent = `QUESTION ${index + 1} / ${activeQuestions.length}`;
+  $('question').textContent = item.q;
+  const optContainer = $('options');
+  optContainer.innerHTML = '';
+
+  item.choices.forEach((choice, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.type = 'button';
+    const letter = document.createElement('span');
+    letter.className = 'letter';
+    letter.textContent = String.fromCharCode(65 + i);
+    const label = document.createElement('span');
+    label.textContent = choice;
+    b.appendChild(letter);
+    b.appendChild(label);
+
+    if (chosen !== undefined) {
+      b.disabled = true;
+      if (i === item.a) b.classList.add('correct');
+      if (i === chosen && chosen !== item.a) b.classList.add('wrong');
+    }
+
+    b.addEventListener('click', function() {
+      if (answers[index] === undefined) {
+        answers[index] = i;
+        renderQuiz();
+      }
+    });
+    optContainer.appendChild(b);
+  });
+
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  if (chosen !== undefined) {
+    fb.textContent = chosen === item.a
+      ? 'Correct answer ✓'
+      : `Incorrect. Correct answer: ${String.fromCharCode(65 + item.a)}. ${item.choices[item.a]}`;
+    fb.className = chosen === item.a ? 'feedback good' : 'feedback bad';
+  } else {
+    fb.textContent = '';
+  }
+
+  $('prev').disabled = index === 0;
+  $('next').textContent = index === activeQuestions.length - 1 ? 'View results →' : 'Next →';
+  updateStats();
+}
+
+function updateStats() {
+  const keys = Object.keys(answers);
+  const n = keys.length;
+  const c = keys.filter(k => answers[k] === activeQuestions[k].a).length;
+  $('answered').textContent = n;
+  $('correct').textContent = c;
+  $('percent').textContent = (n ? Math.round(c / n * 100) : 0) + '%';
+  $('bar').style.width = (activeQuestions.length ? (n / activeQuestions.length * 100) : 0) + '%';
+}
+
+function finishQuiz() {
+  const keys = Object.keys(answers);
+  const n = keys.length;
+  const c = keys.filter(k => answers[k] === activeQuestions[k].a).length;
+  $('quiz-view').classList.add('hidden');
+  $('result-view').classList.remove('hidden');
+  $('summary').textContent = `You answered ${n} of ${activeQuestions.length} questions. Score: ${c} / ${activeQuestions.length} (${Math.round(c / activeQuestions.length * 100)}%).`;
+
+  $('review').innerHTML = '<h3>Review</h3>' + activeQuestions.map((q, i) => {
+    const a = answers[i];
+    return `<div class="review-item"><small>Question ${i + 1} · ${a === undefined ? 'Not answered' : a === q.a ? 'Correct' : 'Incorrect'}</small><strong>${escapeHtml(q.q)}</strong><div>${a === undefined ? 'No answer selected' : `Your answer: ${escapeHtml(q.choices[a])}`}</div><div style="color:var(--green)">Correct: ${escapeHtml(q.choices[q.a])}</div></div>`;
+  }).join('');
+  window.scrollTo(0, 0);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+$('select-all').addEventListener('click', function() {
+  document.querySelectorAll('#topics-list input[type="checkbox"]').forEach(cb => cb.checked = true);
+});
+
+$('clear-all').addEventListener('click', function() {
+  document.querySelectorAll('#topics-list input[type="checkbox"]').forEach(cb => cb.checked = false);
+});
+
+$('start-btn').addEventListener('click', function() {
+  startSelectedQuiz(true);
+});
+
+$('back-setup').addEventListener('click', function() {
+  $('quiz-view').classList.add('hidden');
+  $('setup-view').classList.remove('hidden');
+});
+
+$('prev').addEventListener('click', function() {
+  if (index > 0) { index--; renderQuiz(); }
+});
+
+$('next').addEventListener('click', function() {
+  if (index < activeQuestions.length - 1) { index++; renderQuiz(); } else { finishQuiz(); }
+});
+
+$('finish').addEventListener('click', finishQuiz);
+
+$('again').addEventListener('click', function() {
+  $('result-view').classList.add('hidden');
+  $('setup-view').classList.remove('hidden');
+});
+})();
+</script>
+</body>
+</html>
